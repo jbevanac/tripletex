@@ -2,27 +2,37 @@
 
 namespace Tripletex;
 
+use Http\Client\Common\Plugin\AuthenticationPlugin;
+use Http\Client\Common\Plugin\ErrorPlugin;
+use Http\Client\Common\Plugin\RetryPlugin;
+use Http\Client\Common\PluginClient;
+use Http\Discovery\Composer\Plugin;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Discovery\Psr18ClientDiscovery;
+use Http\Message\Authentication\Bearer;
 use JustSteveKing\Tools\Http\Enums\Method;
+use Psr\Http\Client\ClientInterface;
+use Tripletex\Contracts\SDKInterface;
 use Tripletex\Resources\CustomerResource;
 use Psr\SimpleCache\CacheInterface;
+use Tripletex\Resources\InvoiceResource;
 
-final readonly class SDK
+final class SDK implements SDKInterface
 {
     private const string AUTH_ROUTE = '/token/session/:create';
     private const string LOGOUT_ROUTE = '/token/session/';
     private ?string $sessionToken;
     public function __construct(
-        private string $url,
-        private string $consumerToken,
-        private string $employeeToken,
-        private ?CacheInterface $cache = null,
-        private string $cacheKey = 'tripletex_session_token',
-        private int $cacheLifeTime = 86400,
+        private readonly string $url,
+        private readonly string $consumerToken,
+        private readonly string $employeeToken,
+        private ?ClientInterface $client = null,
+        private readonly ?CacheInterface $cache = null,
+        private readonly string $cacheKey = 'tripletex_session_token',
+        private readonly int $cacheLifeTime = 86400,
+        private array $plugins = [],
     ) {
         $this->loadOrCreateSessionToken();
-        var_dump($this->sessionToken);
     }
 
     private function loadOrCreateSessionToken(): void
@@ -86,7 +96,7 @@ final readonly class SDK
         $requestFactory = Psr17FactoryDiscovery::findRequestFactory();
         $request = $requestFactory->createRequest(Method::DELETE->value, $uri)
             ->withHeader('Accept', 'application/json')
-            ->withHeader('Authorization', 'Basic '.$this->getAuth());
+            ->withHeader('Authorization', 'Basic '.$this->getToken());
 
         $client = Psr18ClientDiscovery::find();
         $response = $client->sendRequest($request);
@@ -96,15 +106,65 @@ final readonly class SDK
         }
     }
 
-    public function getAuth(): string
+    public function getToken(): string
     {
         return base64_encode("0:$this->sessionToken");
     }
+
     public function customers(): CustomerResource
     {
         return new CustomerResource(
             sdk: $this,
         );
+    }
+
+    public function invoices(): InvoiceResource
+    {
+        return new InvoiceResource(
+            sdk: $this
+        );
+    }
+
+    /**
+     * @param array<int, Plugin> $plugins
+     * @return $this
+     */
+    public function withPlugins(array $plugins): SDK
+    {
+        $this->plugins = array_merge(
+            $this->defaultPlugins(),
+            $plugins,
+        );
+
+        return $this;
+    }
+
+    public function defaultPlugins(): array
+    {
+        return [
+            new RetryPlugin(),
+            new ErrorPlugin(),
+            new AuthenticationPlugin(
+                new Bearer(
+                    token: $this->sessionToken,
+                )
+            )
+        ];
+    }
+
+    public function client(): ClientInterface
+    {
+        return new PluginClient(
+            client: Psr18ClientDiscovery::find(),
+            plugins: $this->plugins,
+        );
+    }
+
+    public function setClient(ClientInterface $client): SDK
+    {
+        $this->client = $client;
+
+        return $this;
     }
 
     public function getUrl(): string

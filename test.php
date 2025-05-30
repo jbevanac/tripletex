@@ -16,4 +16,12 @@ $sdk = new \Tripletex\SDK(
     employeeToken: $employeeToken,
 );
 
+$customer = [
+    'name' => 'TestName',
+    'email' => 'test@example.com',
+];
+$customer = \Tripletex\DTO\Customer::make($customer);
+$customer = $sdk->customers()->create($customer);
+
+var_dump($customer);
 $sdk->logout();
