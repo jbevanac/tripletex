@@ -1,0 +1,33 @@
+{
+  "name": "jbevanac/tripletex",
+  "description": "Tripletex PHP SDK",
+  "authors": [
+    {
+      "name": "Jonathan Bevan",
+      "email": "jonathan@turnover.no",
+      "homepage": "https://github.com/jbevanac",
+      "role": "Developer"
+    }
+  ],
+  "license": "MIT",
+  "require": {
+    "php": "^8.3",
+    "juststeveking/sdk-tools": "^0.0.5",
+    "symfony/http-client": "^7.3",
+    "nyholm/psr7": "^1.8",
+    "php-http/discovery": "^1.20",
+    "psr/http-client-implementation": "*",
+    "psr/http-client": "^1.0",
+    "psr/simple-cache": "^3.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Tripletex\\": "src/"
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "php-http/discovery": true
+    }
+  }
+}
