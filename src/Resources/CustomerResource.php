@@ -7,47 +7,24 @@ use Ramsey\Collection\Collection;
 use Tripletex\Contracts\ResourceInterface;
 use Tripletex\DTO\Customer;
 use Tripletex\Enum\Sort;
-use Tripletex\Exceptions\FailedToCreateResourceException;
 use Tripletex\Exceptions\FailedToFetchResourceException;
 use Tripletex\Resources\Concerns\CanAccessSDK;
 use Tripletex\Resources\Concerns\CanCreateRequest;
+use Tripletex\Resources\Concerns\CanCreateResource;
 
 final class CustomerResource implements ResourceInterface
 {
     use CanAccessSDK;
     use CanCreateRequest;
+    use CanCreateResource;
+
 
     public function create(Customer $customer): Customer
     {
-        $request = $this->request(
-            method: Method::POST,
+        return $this->createResource(
+            dto: $customer,
             url: 'customer',
-        );
-
-        $request = $this->attachPayLoad(
-            request: $request,
-            payload: $customer->toJson(),
-        );
-
-        try {
-            $response = $this->getSdk()->client()->sendRequest(
-                request: $request,
-            );
-        } catch (\Throwable $e) {
-            throw new FailedToCreateResourceException(
-                message: 'Failed to create Invoice',
-                previous: $e,
-            );
-        }
-
-        $responseData = json_decode(
-            json: $response->getBody()->getContents(),
-            associative: true,
-            flags: JSON_THROW_ON_ERROR,
-        );
-
-        return Customer::make(
-            data: $responseData['value'] ?? $responseData
+            factory: fn(array $data) => Customer::make(data: $data),
         );
     }
 

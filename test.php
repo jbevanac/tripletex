@@ -17,7 +17,7 @@ $sdk = new \Tripletex\SDK(
 );
 
 $customer = [
-    'name' => 'TestName',
+    'name' => 'Hello',
     'email' => 'test@example.com',
 ];
 $customer = \Tripletex\DTO\Customer::make($customer);

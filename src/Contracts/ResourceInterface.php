@@ -11,4 +11,7 @@ interface ResourceInterface
     public function request(Method $method, string $url): RequestInterface;
 
     public function getSdk(): SDK;
+
+    public function attachPayLoad(RequestInterface $request, string $payload): RequestInterface;
+
 }
