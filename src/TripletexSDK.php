@@ -17,7 +17,7 @@ use Tripletex\Resources\CustomerResource;
 use Psr\SimpleCache\CacheInterface;
 use Tripletex\Resources\InvoiceResource;
 
-final class SDK implements SDKInterface
+final class TripletexSDK implements SDKInterface
 {
     private const string AUTH_ROUTE = '/token/session/:create';
     private const string LOGOUT_ROUTE = '/token/session/';
@@ -126,7 +126,7 @@ final class SDK implements SDKInterface
      * @param array<int, Plugin> $plugins
      * @return $this
      */
-    public function withPlugins(array $plugins): SDK
+    public function withPlugins(array $plugins): TripletexSDK
     {
         $this->plugins = array_merge(
             $this->defaultPlugins(),
@@ -163,7 +163,7 @@ final class SDK implements SDKInterface
         return $this->client;
     }
 
-    public function setClient(ClientInterface $client): SDK
+    public function setClient(ClientInterface $client): TripletexSDK
     {
         $this->client = $client;
 

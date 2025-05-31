@@ -3,7 +3,7 @@
 namespace Tripletex\Resources\Concerns;
 
 use Tripletex\Contracts\ResourceInterface;
-use Tripletex\SDK;
+use Tripletex\TripletexSDK;
 
 /**
  * @mixin ResourceInterface
@@ -11,11 +11,11 @@ use Tripletex\SDK;
 trait CanAccessSDK
 {
     public function __construct(
-        private readonly SDK $sdk,
+        private readonly TripletexSDK $sdk,
     ) {
     }
 
-    public function getSdk(): SDK
+    public function getSdk(): TripletexSDK
     {
         return $this->sdk;
     }

@@ -3,7 +3,7 @@
 require '00-setup.php';
 
 try {
-    $sdk = new \Tripletex\SDK(
+    $sdk = new \Tripletex\TripletexSDK(
         url: URL,
         consumerToken: CONSUMER_TOKEN,
         employeeToken: EMPLOYEE_TOKEN,
