@@ -1,5 +1,6 @@
 <?php
 
-$url = 'https://api-test.tripletex.tech/v2';
-$consumerToken = '';
-$employeeToken = '';
+
+const URL = 'https://api-test.tripletex.tech/v2';
+const CONSUMER_TOKEN = '';
+const EMPLOYEE_TOKEN = '';
