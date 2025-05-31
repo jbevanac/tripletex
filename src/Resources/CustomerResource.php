@@ -19,15 +19,6 @@ final class CustomerResource implements ResourceInterface
     use CanCreateRequest;
     use CanCreateResource;
 
-    public function create(ModelInterface $model): ModelInterface
-    {
-        return $this->createResource(
-            dto: $model,
-            url: $model::CREATE_PATH,
-            factory: fn(array $data) => $model::make(data: $data),
-        );
-    }
-
     /**
      * @throws FailedToFetchResourceException
      * @throws \JsonException

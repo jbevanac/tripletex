@@ -6,7 +6,7 @@ use Tripletex\Contracts\ModelInterface;
 
 class Invoice implements ModelInterface
 {
-    use Model;
+    use DTOTrait;
 
     public const string CREATE_PATH = 'invoice';
     public const string LIST_PATH = '';

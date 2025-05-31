@@ -9,7 +9,7 @@ use Tripletex\Enum\InvoiceSendMethod;
 
 final class Customer implements ModelInterface
 {
-    use Model;
+    use DTOTrait;
 
     public const string CREATE_PATH = 'customer';
     public const string LIST_PATH = '';

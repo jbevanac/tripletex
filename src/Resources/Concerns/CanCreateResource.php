@@ -5,7 +5,9 @@ namespace Tripletex\Resources\Concerns;
 namespace Tripletex\Resources\Concerns;
 
 use JustSteveKing\Tools\Http\Enums\Method;
+use Tripletex\Contracts\ModelInterface;
 use Tripletex\Contracts\ResourceInterface;
+use Tripletex\DTO\ErrorResponse;
 use Tripletex\Exceptions\FailedToCreateResourceException;
 
 /**
@@ -23,11 +25,11 @@ trait CanCreateResource
      *
      * @throws FailedToCreateResourceException
      */
-    public function createResource(object $dto, string $url, ?callable $factory = null): object
+    public function create(ModelInterface $dto): ModelInterface
     {
         $request = $this->request(
             method: Method::POST,
-            url: $url,
+            url: $dto::CREATE_PATH,
         );
 
         $request = $this->attachPayLoad(
@@ -41,7 +43,7 @@ trait CanCreateResource
             );
         } catch (\Throwable $e) {
             throw new FailedToCreateResourceException(
-                message: 'Failed to create resource at ' . $url,
+                message: 'Failed to create resource at ' . $dto::CREATE_PATH,
                 previous: $e,
             );
         }
@@ -54,11 +56,10 @@ trait CanCreateResource
 
         $data = $responseData['value'] ?? $responseData;
 
-        if ($factory) {
-            return $factory($data);
+        if (201 == $response->getStatusCode()) {
+            return $dto::make(data: $data);
         }
 
-        // Fallback if no factory provided, just return the raw data
-        return $data;
+        return ErrorResponse::make(data: $data);
     }
 }
