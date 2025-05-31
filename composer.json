@@ -13,7 +13,6 @@
   "require": {
     "php": "^8.3",
     "juststeveking/sdk-tools": "^0.0.5",
-    "symfony/http-client": "^7.3",
     "nyholm/psr7": "^1.8",
     "php-http/discovery": "^1.20",
     "psr/http-client-implementation": "*",
@@ -23,6 +22,9 @@
     "ramsey/collection": "^2.1",
     "symfony/serializer": "^7.3",
     "symfony/property-access": "^7.3"
+  },
+  "require-dev": {
+    "symfony/http-client": "^7.3"
   },
   "autoload": {
     "psr-4": {
