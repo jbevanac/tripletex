@@ -41,15 +41,12 @@ final class SDK implements SDKInterface
             $token = $this->cache->get($this->cacheKey);
             if ($token) {
                 $this->sessionToken = $token;
-                var_dump('found');
                 return;
             }
         }
 
         $token = $this->authenticate();
-        if ($this->cache) {
-            $this->cache->set($this->cacheKey, $token, $this->cacheLifeTime);
-        }
+        $this->cache?->set($this->cacheKey, $token, $this->cacheLifeTime);
         $this->sessionToken = $token;
     }
 
@@ -154,10 +151,16 @@ final class SDK implements SDKInterface
 
     public function client(): ClientInterface
     {
-        return new PluginClient(
+        if ($this->client !== null) {
+            return $this->client;
+        }
+
+        $this->client = new PluginClient(
             client: Psr18ClientDiscovery::find(),
             plugins: $this->plugins,
         );
+
+        return $this->client;
     }
 
     public function setClient(ClientInterface $client): SDK

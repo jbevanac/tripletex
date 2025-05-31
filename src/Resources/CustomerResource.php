@@ -4,6 +4,7 @@ namespace Tripletex\Resources;
 
 use JustSteveKing\Tools\Http\Enums\Method;
 use Ramsey\Collection\Collection;
+use Tripletex\Contracts\ModelInterface;
 use Tripletex\Contracts\ResourceInterface;
 use Tripletex\DTO\Customer;
 use Tripletex\Enum\Sort;
@@ -18,13 +19,12 @@ final class CustomerResource implements ResourceInterface
     use CanCreateRequest;
     use CanCreateResource;
 
-
-    public function create(Customer $customer): Customer
+    public function create(ModelInterface $model): ModelInterface
     {
         return $this->createResource(
-            dto: $customer,
-            url: 'customer',
-            factory: fn(array $data) => Customer::make(data: $data),
+            dto: $model,
+            url: $model::CREATE_PATH,
+            factory: fn(array $data) => $model::make(data: $data),
         );
     }
 
@@ -32,12 +32,12 @@ final class CustomerResource implements ResourceInterface
      * @throws FailedToFetchResourceException
      * @throws \JsonException
      */
-    public function list(array $filters = [], ?Sort $sort = null, ?string $direction = null, ?int $page = null): Collection
+    public function list(ModelInterface $model, array $filters = [], ?Sort $sort = null, ?string $direction = null, ?int $page = null): Collection
     {
         $request = $this->applyFilters(
             request: $this->request(
                 method: Method::GET,
-                url: 'customers',
+                url: $model::LIST_PATH,
             ),
             filters: $filters
         );
@@ -66,7 +66,7 @@ final class CustomerResource implements ResourceInterface
         return new Collection(
             collectionType: Customer::class,
             data: array_map(
-                callback: static fn (array $data): Customer => Customer::make(
+                callback: static fn (array $data): ModelInterface => $model::make(
                     data: $data,
                 ),
                 array: (array) json_decode(

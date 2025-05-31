@@ -7,6 +7,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
+use Tripletex\Contracts\ModelInterface;
 
 trait Model
 {
@@ -24,9 +25,9 @@ trait Model
 
     /**
      * @param array $data
-     * @return static
+     * @return ModelInterface
      */
-    public static function make(array $data): self
+    public static function make(array $data): ModelInterface
     {
         $normalizer = new ObjectNormalizer(null, null, null, new ReflectionExtractor());
         $serializer = new Serializer([$normalizer], [new JsonEncoder()]);
