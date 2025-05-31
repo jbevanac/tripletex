@@ -15,7 +15,8 @@ use Psr\Http\Client\ClientInterface;
 use Tripletex\Contracts\SDKInterface;
 use Tripletex\Resources\CustomerResource;
 use Psr\SimpleCache\CacheInterface;
-use Tripletex\Resources\InvoiceResource;
+use Tripletex\Resources\InvoicesResource;
+use Tripletex\Resources\OrdersResource;
 
 final class TripletexSDK implements SDKInterface
 {
@@ -115,9 +116,16 @@ final class TripletexSDK implements SDKInterface
         );
     }
 
-    public function invoices(): InvoiceResource
+    public function invoices(): InvoicesResource
     {
-        return new InvoiceResource(
+        return new InvoicesResource(
+            sdk: $this
+        );
+    }
+
+    public function orders(): OrdersResource
+    {
+        return new OrdersResource(
             sdk: $this
         );
     }

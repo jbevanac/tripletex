@@ -7,7 +7,7 @@ use Tripletex\Resources\Concerns\CanAccessSDK;
 use Tripletex\Resources\Concerns\CanCreateRequest;
 use Tripletex\Resources\Concerns\CanCreateResource;
 
-class InvoiceResource implements ResourceInterface
+class InvoicesResource implements ResourceInterface
 {
     use CanAccessSDK;
     use CanCreateRequest;
