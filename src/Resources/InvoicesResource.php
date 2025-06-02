@@ -8,6 +8,7 @@ use Tripletex\DTO\ErrorResponse;
 use Tripletex\DTO\Invoice;
 use Tripletex\Exceptions\ApiException;
 use Tripletex\Resources\Concerns\CanAccessSDK;
+use Tripletex\Resources\Concerns\CanCreateCollection;
 use Tripletex\Resources\Concerns\CanCreateRequest;
 use Tripletex\Resources\Concerns\CanCreateResource;
 use Tripletex\Resources\Concerns\CanFindResource;
@@ -17,6 +18,7 @@ class InvoicesResource implements ResourceInterface
 {
     use CanAccessSDK;
     use CanCreateRequest;
+    use CanCreateCollection;
     use CanCreateResource;
     use CanFindResource;
     use CanListResource;
@@ -29,7 +31,8 @@ class InvoicesResource implements ResourceInterface
         $invoice = Invoice::make($data);
 
         return $this->createResource(
-            dto: $invoice
+            dto: $invoice,
+            path: 'invoice',
         );
     }
 
@@ -40,7 +43,7 @@ class InvoicesResource implements ResourceInterface
     {
         return $this->findResource(
             modelClass: Invoice::class,
-            id: $id,
+            path: 'invoice/'.$id,
         );
     }
 
@@ -51,6 +54,7 @@ class InvoicesResource implements ResourceInterface
     {
         return $this->listResource(
             modelClass: Invoice::class,
+            path: 'invoice/list',
             filters: $filters,
             page: $page
         );

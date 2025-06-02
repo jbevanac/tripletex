@@ -11,9 +11,6 @@ final class Customer implements ModelInterface
 {
     use DTOTrait;
 
-    public const string CREATE_PATH = 'customer';
-    public const string LIST_PATH = '';
-
     public function __construct(
         public ?int $id,
         public string $name,

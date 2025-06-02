@@ -7,7 +7,6 @@ use JustSteveKing\Tools\Http\Enums\Method;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Tripletex\Contracts\ResourceInterface;
-use Tripletex\Exceptions\ApiException;
 use Tripletex\Exceptions\FailedToDecodeJsonResponseException;
 use Tripletex\Exceptions\FailedToSendRequestException;
 use Tripletex\Resources\Filters\Filter;

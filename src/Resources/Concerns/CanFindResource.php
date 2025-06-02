@@ -17,7 +17,7 @@ trait CanFindResource
      *
      * @throws ApiException
      */
-    public function findResource(string $modelClass, int $id): ModelInterface|ErrorResponse
+    public function findResource(string $modelClass, string $path): ModelInterface|ErrorResponse
     {
         if (!is_subclass_of($modelClass, ModelInterface::class)) {
             throw new \InvalidArgumentException("$modelClass must implement ModelInterface");
@@ -25,7 +25,7 @@ trait CanFindResource
 
         $request = $this->request(
             method: Method::GET,
-            url: $modelClass::CREATE_PATH.'/'.$id,
+            url: $path,
         );
 
         $response = $this->sendRequest($request);

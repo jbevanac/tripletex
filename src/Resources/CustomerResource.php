@@ -8,6 +8,7 @@ use Tripletex\DTO\Customer;
 use Tripletex\DTO\ErrorResponse;
 use Tripletex\Exceptions\ApiException;
 use Tripletex\Resources\Concerns\CanAccessSDK;
+use Tripletex\Resources\Concerns\CanCreateCollection;
 use Tripletex\Resources\Concerns\CanCreateRequest;
 use Tripletex\Resources\Concerns\CanCreateResource;
 use Tripletex\Resources\Concerns\CanFindResource;
@@ -17,6 +18,7 @@ final class CustomerResource implements ResourceInterface
 {
     use CanAccessSDK;
     use CanCreateRequest;
+    use CanCreateCollection;
     use CanCreateResource;
     use CanFindResource;
     use CanListResource;
@@ -29,7 +31,8 @@ final class CustomerResource implements ResourceInterface
         $customer = Customer::make($data);
 
         return $this->createResource(
-            dto: $customer
+            dto: $customer,
+            path: 'customer',
         );
     }
 
@@ -40,7 +43,7 @@ final class CustomerResource implements ResourceInterface
     {
         return $this->findResource(
             modelClass: Customer::class,
-            id: $id,
+            path: 'customer/'.$id,
         );
     }
 
@@ -51,6 +54,7 @@ final class CustomerResource implements ResourceInterface
     {
         return $this->listResource(
             modelClass: Customer::class,
+            path: 'customer/list',
             filters: $filters,
             page: $page
         );

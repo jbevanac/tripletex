@@ -7,7 +7,6 @@ use Tripletex\Contracts\ModelInterface;
 use Tripletex\Contracts\ResourceInterface;
 use Tripletex\DTO\ErrorResponse;
 use Tripletex\Exceptions\ApiException;
-use Tripletex\Exceptions\FailedToCreateResourceException;
 
 /**
  * @mixin ResourceInterface
@@ -22,11 +21,11 @@ trait CanCreateResource
      * @return ErrorResponse|ModelInterface
      * @throws ApiException
      */
-    public function createResource(ModelInterface $dto): ErrorResponse|ModelInterface
+    public function createResource(ModelInterface $dto, string $path): ErrorResponse|ModelInterface
     {
         $request = $this->request(
             method: Method::POST,
-            url: $dto::CREATE_PATH,
+            url: $path,
         );
 
         $request = $this->attachPayLoad(

@@ -19,7 +19,7 @@ trait CanListResource
      * @throws FailedToSendRequestException
      * @throws ApiException
      */
-    public function listResource(string $modelClass, array $filters = [], ?int $page = null): ModelInterface|Collection
+    public function listResource(string $modelClass, string $path, array $filters = [], ?int $page = null): ModelInterface|Collection
     {
         if (!is_subclass_of($modelClass, ModelInterface::class)) {
             throw new \InvalidArgumentException("$modelClass must implement ModelInterface");
@@ -28,7 +28,7 @@ trait CanListResource
         $request = $this->applyFilters(
             request: $this->request(
                 method: Method::GET,
-                url: $modelClass::LIST_PATH,
+                url: $path,
             ),
             filters: $filters
         );
@@ -52,21 +52,6 @@ trait CanListResource
 
         return $this->createCollection($modelClass, $data);
 
-    }
-
-    public function createCollection(string $modelClass, array $data): Collection
-    {
-        if (!is_subclass_of($modelClass, ModelInterface::class)) {
-            throw new \InvalidArgumentException("$modelClass must implement ModelInterface");
-        }
-
-        return new Collection(
-            collectionType: $modelClass,
-            data: array_map(
-                fn (array $item): ModelInterface => $modelClass::make($item),
-                $data
-            )
-        );
     }
 
 }
