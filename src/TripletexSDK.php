@@ -22,6 +22,7 @@ use Tripletex\Resources\CustomersResource;
 use Psr\SimpleCache\CacheInterface;
 use Tripletex\Resources\InvoicesResource;
 use Tripletex\Resources\OrdersResource;
+use Tripletex\Resources\DebugResource;
 
 final class TripletexSDK implements SDKInterface
 {
@@ -75,8 +76,7 @@ final class TripletexSDK implements SDKInterface
         $request = $requestFactory->createRequest(Method::PUT->value, $uri)
             ->withHeader('Accept', 'application/json');
 
-        $client = Psr18ClientDiscovery::find();
-        $response = $client->sendRequest($request);
+        $response = $this->client()->sendRequest($request);
 
         $body = (string) $response->getBody();
         $data = json_decode($body, true);
@@ -102,8 +102,7 @@ final class TripletexSDK implements SDKInterface
             ->withHeader('Accept', 'application/json')
             ->withHeader('Authorization', 'Basic '.$this->getToken());
 
-        $client = Psr18ClientDiscovery::find();
-        $response = $client->sendRequest($request);
+        $response = $this->client()->sendRequest($request);
 
         if ($response->getStatusCode() !== 204) {
             // throw new \RuntimeException('Did not log out');
@@ -132,6 +131,13 @@ final class TripletexSDK implements SDKInterface
     public function orders(): OrdersResource
     {
         return new OrdersResource(
+            sdk: $this
+        );
+    }
+
+    public function request(): DebugResource
+    {
+        return new DebugResource(
             sdk: $this
         );
     }

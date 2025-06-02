@@ -16,8 +16,21 @@ use Tripletex\Resources\Filters\Filter;
  */
 trait CanCreateRequest
 {
+    public function prepareUrl(string $url): string
+    {
+        $baseUrl = str_replace('https://', '', rtrim($this->getSdk()->getUrl(), '/'));
+        $url = str_replace('https://', '', trim($url, '/'));
+
+        // If the url starts with baseUrl, remove the duplicated base
+        if (str_starts_with($url, $baseUrl)) {
+            $url = ltrim(substr($url, strlen($baseUrl)), '/');
+        }
+
+        return 'https://' . $baseUrl . '/' . $url;
+    }
+
     public function request(Method $method, string $url, array $query = [], ?string $body = null, array $headers = []): RequestInterface {
-        $uri = rtrim($this->getSdk()->getUrl(), '/') . '/' . ltrim($url, '/');
+        $uri = $this->prepareUrl($url);
 
         if (!empty($query)) {
             $uri .= '?' . http_build_query($query);

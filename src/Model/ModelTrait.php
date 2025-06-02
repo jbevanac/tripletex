@@ -34,6 +34,8 @@ trait ModelTrait
      */
     public static function make(array $data): ModelInterface
     {
+        $data = $data['value'] ?? $data;
+
         try {
             return TripletexSDK::getSerializer()->denormalize(
                 data: $data,

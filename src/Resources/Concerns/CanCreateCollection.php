@@ -17,6 +17,8 @@ trait CanCreateCollection
             throw new \InvalidArgumentException("$modelClass must implement ModelInterface");
         }
 
+        $data = $data['values'] ?? $data;
+
         return new Collection(
             collectionType: $modelClass,
             data: array_map(
