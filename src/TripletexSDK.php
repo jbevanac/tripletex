@@ -12,6 +12,12 @@ use Http\Discovery\Psr18ClientDiscovery;
 use Http\Message\Authentication\Bearer;
 use JustSteveKing\Tools\Http\Enums\Method;
 use Psr\Http\Client\ClientInterface;
+use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\BackedEnumNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\SerializerInterface;
 use Tripletex\Contracts\SDKInterface;
 use Tripletex\Resources\CustomerResource;
 use Psr\SimpleCache\CacheInterface;
@@ -23,6 +29,7 @@ final class TripletexSDK implements SDKInterface
     private const string AUTH_ROUTE = '/token/session/:create';
     private const string LOGOUT_ROUTE = '/token/session/';
     private ?string $sessionToken;
+
     public function __construct(
         private readonly string $url,
         private readonly string $consumerToken,
@@ -181,6 +188,15 @@ final class TripletexSDK implements SDKInterface
     public function getUrl(): string
     {
         return $this->url;
+    }
+
+    public static function getSerializer(): Serializer
+    {
+         return new Serializer(
+            [new BackedEnumNormalizer(), new ObjectNormalizer(null, null, null, new ReflectionExtractor())],
+            [new JsonEncoder()]
+        );
+
     }
 
 }
