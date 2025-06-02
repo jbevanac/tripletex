@@ -36,7 +36,7 @@ final class TripletexSDK implements SDKInterface
         private ?ClientInterface $client = null,
         private readonly ?CacheInterface $cache = null,
         private readonly string $cacheKey = 'tripletex_session_token',
-        private readonly int $cacheLifeTime = 100000,
+        private readonly int $cacheLifeTime = 129600,
         private array $plugins = [],
     ) {
         $this->loadOrCreateSessionToken();
