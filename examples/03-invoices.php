@@ -18,11 +18,11 @@ $orderData = [
     'deliveryDate' => '2025-06-03',
     // 'isSubscription' => true,
     'orderLines' => [
-        new \Tripletex\DTO\OrderLine(description: 'Some description', count: 1, unitPriceExcludingVatCurrency: 3990),
-        new \Tripletex\DTO\OrderLine(description: 'Another line', count: 453, unitPriceExcludingVatCurrency: 3),
+        new \Tripletex\Model\OrderLine(description: 'Some description', count: 1, unitPriceExcludingVatCurrency: 3990),
+        new \Tripletex\Model\OrderLine(description: 'Another line', count: 453, unitPriceExcludingVatCurrency: 3),
     ]
 ];
-$order = \Tripletex\DTO\Order::make($orderData);
+$order = \Tripletex\Model\Order::make($orderData);
 
 // $order = $sdk->orders()->create($order);
 $orders = $sdk->orders()->list();

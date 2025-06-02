@@ -1,6 +1,6 @@
 <?php
 
-namespace Tripletex\DTO;
+namespace Tripletex\Model;
 
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Tripletex\Contracts\ModelInterface;
@@ -8,7 +8,7 @@ use Tripletex\Exceptions\ApiException;
 use Tripletex\Exceptions\SerializerException;
 use Tripletex\TripletexSDK;
 
-trait DTOTrait
+trait ModelTrait
 {
 
     /**

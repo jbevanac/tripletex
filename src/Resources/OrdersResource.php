@@ -3,8 +3,8 @@
 namespace Tripletex\Resources;
 
 use Tripletex\Contracts\ResourceInterface;
-use Tripletex\DTO\ErrorResponse;
-use Tripletex\DTO\Order;
+use Tripletex\Model\ErrorResponse;
+use Tripletex\Model\Order;
 use Tripletex\Exceptions\ApiException;
 use Tripletex\Exceptions\FailedToCreateResourceException;
 use Tripletex\Resources\Concerns\CanAccessSDK;
@@ -30,7 +30,7 @@ final class OrdersResource implements ResourceInterface
         $order = Order::make($order);
 
         return $this->createResource(
-            dto: $order,
+            model: $order,
             path: 'order',
         );
     }

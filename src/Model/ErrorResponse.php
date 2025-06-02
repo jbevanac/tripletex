@@ -1,12 +1,12 @@
 <?php
 
-namespace Tripletex\DTO;
+namespace Tripletex\Model;
 
 use Tripletex\Contracts\ModelInterface;
 
 class ErrorResponse implements ModelInterface
 {
-    use DTOTrait;
+    use ModelTrait;
 
     public function __construct(
         public int $status,

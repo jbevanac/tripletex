@@ -1,12 +1,12 @@
 <?php
 
-namespace Tripletex\DTO;
+namespace Tripletex\Model;
 
 use Tripletex\Contracts\ModelInterface;
 
 final class ValidationMessage implements ModelInterface
 {
-    use DTOTrait;
+    use ModelTrait;
 
     public function __construct(
         public string $field,

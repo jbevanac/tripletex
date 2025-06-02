@@ -22,7 +22,7 @@ $customerData = [
 ];
 $customer = $sdk->customers()->create($customerData);
 
-$customerCreated = $customer instanceof  \Tripletex\DTO\Customer;
+$customerCreated = $customer instanceof  \Tripletex\Model\Customer;
 var_dump($customer);
 var_dump($customerCreated);
 

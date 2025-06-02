@@ -4,8 +4,8 @@ namespace Tripletex\Resources;
 
 use Ramsey\Collection\Collection;
 use Tripletex\Contracts\ResourceInterface;
-use Tripletex\DTO\ErrorResponse;
-use Tripletex\DTO\Invoice;
+use Tripletex\Model\ErrorResponse;
+use Tripletex\Model\Invoice;
 use Tripletex\Exceptions\ApiException;
 use Tripletex\Resources\Concerns\CanAccessSDK;
 use Tripletex\Resources\Concerns\CanCreateCollection;
@@ -31,7 +31,7 @@ class InvoicesResource implements ResourceInterface
         $invoice = Invoice::make($data);
 
         return $this->createResource(
-            dto: $invoice,
+            model: $invoice,
             path: 'invoice',
         );
     }

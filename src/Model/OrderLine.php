@@ -1,13 +1,13 @@
 <?php
 
-namespace Tripletex\DTO;
+namespace Tripletex\Model;
 
 use Tripletex\Contracts\ModelInterface;
 use Tripletex\Reference;
 
 final class OrderLine implements ModelInterface
 {
-    use DTOTrait;
+    use ModelTrait;
 
     public function __construct(
         public ?Reference $order = null,

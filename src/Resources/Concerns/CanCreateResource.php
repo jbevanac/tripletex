@@ -5,7 +5,7 @@ namespace Tripletex\Resources\Concerns;
 use JustSteveKing\Tools\Http\Enums\Method;
 use Tripletex\Contracts\ModelInterface;
 use Tripletex\Contracts\ResourceInterface;
-use Tripletex\DTO\ErrorResponse;
+use Tripletex\Model\ErrorResponse;
 use Tripletex\Exceptions\ApiException;
 
 /**
@@ -14,14 +14,9 @@ use Tripletex\Exceptions\ApiException;
 trait CanCreateResource
 {
     /**
-     * Create a resource via POST request.
-     *
-     * @param ModelInterface $dto
-     *
-     * @return ErrorResponse|ModelInterface
      * @throws ApiException
      */
-    public function createResource(ModelInterface $dto, string $path): ErrorResponse|ModelInterface
+    public function createResource(ModelInterface $model, string $path): ErrorResponse|ModelInterface
     {
         $request = $this->request(
             method: Method::POST,
@@ -30,7 +25,7 @@ trait CanCreateResource
 
         $request = $this->attachPayLoad(
             request: $request,
-            payload: $dto->toJson(),
+            payload: $model->toJson(),
         );
 
         $response = $this->sendRequest($request);
@@ -38,7 +33,7 @@ trait CanCreateResource
         $data = $responseData['value'] ?? $responseData;
 
         if (201 == $response->getStatusCode()) {
-            return $dto::make(data: $data);
+            return $model::make(data: $data);
         }
 
         return ErrorResponse::make(data: $data);

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tripletex\DTO;
+namespace Tripletex\Model;
 
 use Tripletex\Contracts\ModelInterface;
 use Tripletex\Enum\EmailAttachmentType;
@@ -9,7 +9,7 @@ use Tripletex\Enum\InvoiceSendMethod;
 
 final class Customer implements ModelInterface
 {
-    use DTOTrait;
+    use ModelTrait;
 
     public function __construct(
         public ?int $id,

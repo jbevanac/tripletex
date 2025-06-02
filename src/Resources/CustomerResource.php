@@ -4,8 +4,8 @@ namespace Tripletex\Resources;
 
 use Ramsey\Collection\Collection;
 use Tripletex\Contracts\ResourceInterface;
-use Tripletex\DTO\Customer;
-use Tripletex\DTO\ErrorResponse;
+use Tripletex\Model\Customer;
+use Tripletex\Model\ErrorResponse;
 use Tripletex\Exceptions\ApiException;
 use Tripletex\Resources\Concerns\CanAccessSDK;
 use Tripletex\Resources\Concerns\CanCreateCollection;
@@ -31,7 +31,7 @@ final class CustomerResource implements ResourceInterface
         $customer = Customer::make($data);
 
         return $this->createResource(
-            dto: $customer,
+            model: $customer,
             path: 'customer',
         );
     }
