@@ -3,6 +3,7 @@
 namespace Tripletex\Model;
 
 use Tripletex\Contracts\ModelInterface;
+use Tripletex\Enum\subscriptionDurationType;
 use Tripletex\Reference;
 
 final class Order implements ModelInterface
@@ -14,8 +15,10 @@ final class Order implements ModelInterface
         public string $orderDate,
         public string $deliveryDate,
         public ?int $id = null,
-        public ?bool $isSubscription = null,
         public ?array $orderLines = null,
+        public ?bool $isSubscription = null,
+        public ?int $subscriptionDuration = null,
+        public ?SubscriptionDurationType $subscriptionDurationType = null,
     ) {
     }
 
