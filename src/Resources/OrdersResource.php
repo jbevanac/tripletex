@@ -36,7 +36,6 @@ final class OrdersResource implements ResourceInterface
     }
 
     /**
-     * @throws FailedToCreateResourceException
      * @throws ApiException
      */
     public function find(int $id): Order|ErrorResponse
@@ -44,6 +43,18 @@ final class OrdersResource implements ResourceInterface
         return $this->findResource(
             modelClass: Order::class,
             path: 'order/'.$id,
+        );
+    }
+
+    /**
+     * @throws ApiException
+     */
+    public function findRaw(int $id): array
+    {
+        return $this->findResource(
+            modelClass: Order::class,
+            path: 'order/'.$id,
+            raw: true,
         );
     }
 

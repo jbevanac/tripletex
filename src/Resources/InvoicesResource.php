@@ -47,6 +47,19 @@ class InvoicesResource implements ResourceInterface
         );
     }
 
+
+    /**
+     * @throws ApiException
+     */
+    public function findRaw(int $id): array
+    {
+        return $this->findResource(
+            modelClass: Invoice::class,
+            path: 'invoice/'.$id,
+            raw: true,
+        );
+    }
+
     /**
      * @throws ApiException
      */

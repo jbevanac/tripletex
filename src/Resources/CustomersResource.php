@@ -15,7 +15,7 @@ use Tripletex\Resources\Concerns\CanFindResource;
 use Tripletex\Resources\Concerns\CanListResource;
 use Tripletex\Resources\Concerns\CanUpdateResource;
 
-final class CustomerResource implements ResourceInterface
+final class CustomersResource implements ResourceInterface
 {
     use CanAccessSDK;
     use CanCreateRequest;
@@ -46,6 +46,18 @@ final class CustomerResource implements ResourceInterface
         return $this->findResource(
             modelClass: Customer::class,
             path: 'customer/'.$id,
+        );
+    }
+
+    /**
+     * @throws ApiException
+     */
+    public function findRaw(int $id): array
+    {
+        return $this->findResource(
+            modelClass: Customer::class,
+            path: 'customer/'.$id,
+            raw: true,
         );
     }
 

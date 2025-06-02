@@ -17,7 +17,7 @@ trait CanFindResource
      *
      * @throws ApiException
      */
-    public function findResource(string $modelClass, string $path): ModelInterface|ErrorResponse
+    public function findResource(string $modelClass, string $path, bool $raw = false): ModelInterface|ErrorResponse|array
     {
         if (!is_subclass_of($modelClass, ModelInterface::class)) {
             throw new \InvalidArgumentException("$modelClass must implement ModelInterface");
@@ -30,9 +30,13 @@ trait CanFindResource
 
         $response = $this->sendRequest($request);
         $responseData = $this->decodeJsonResponse($response);
-        $data = $responseData['value'] ?? $responseData;
 
-        if (201 == $response->getStatusCode()) {
+        if ($raw) {
+            return $responseData;
+        }
+
+        $data = $responseData['value'] ?? $responseData;
+        if (200 == $response->getStatusCode()) {
             return $modelClass::make(data: $data);
         }
 

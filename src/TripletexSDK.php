@@ -18,7 +18,7 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Tripletex\Contracts\SDKInterface;
 use Tripletex\Enum\Method;
-use Tripletex\Resources\CustomerResource;
+use Tripletex\Resources\CustomersResource;
 use Psr\SimpleCache\CacheInterface;
 use Tripletex\Resources\InvoicesResource;
 use Tripletex\Resources\OrdersResource;
@@ -115,9 +115,9 @@ final class TripletexSDK implements SDKInterface
         return base64_encode("0:$this->sessionToken");
     }
 
-    public function customers(): CustomerResource
+    public function customers(): CustomersResource
     {
-        return new CustomerResource(
+        return new CustomersResource(
             sdk: $this,
         );
     }
