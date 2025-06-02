@@ -7,31 +7,25 @@ use Tripletex\Contracts\ModelInterface;
 use Tripletex\Contracts\ResourceInterface;
 use Tripletex\DTO\ErrorResponse;
 use Tripletex\Exceptions\ApiException;
-use Tripletex\Exceptions\FailedToCreateResourceException;
 
 /**
  * @mixin ResourceInterface
  */
-trait CanCreateResource
+trait CanFindResource
 {
     /**
-     * Create a resource via POST request.
      *
-     * @param ModelInterface $dto
-     *
-     * @return ErrorResponse|ModelInterface
      * @throws ApiException
      */
-    public function createResource(ModelInterface $dto): ErrorResponse|ModelInterface
+    public function findResource(string $modelClass, int $id): ModelInterface|ErrorResponse
     {
-        $request = $this->request(
-            method: Method::POST,
-            url: $dto::CREATE_PATH,
-        );
+        if (!is_subclass_of($modelClass, ModelInterface::class)) {
+            throw new \InvalidArgumentException("$modelClass must implement ModelInterface");
+        }
 
-        $request = $this->attachPayLoad(
-            request: $request,
-            payload: $dto->toJson(),
+        $request = $this->request(
+            method: Method::GET,
+            url: $modelClass::CREATE_PATH.'/'.$id,
         );
 
         $response = $this->sendRequest($request);
@@ -39,7 +33,7 @@ trait CanCreateResource
         $data = $responseData['value'] ?? $responseData;
 
         if (201 == $response->getStatusCode()) {
-            return $dto::make(data: $data);
+            return $modelClass::make(data: $data);
         }
 
         return ErrorResponse::make(data: $data);

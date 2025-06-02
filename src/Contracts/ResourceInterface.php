@@ -4,6 +4,8 @@ namespace Tripletex\Contracts;
 
 use JustSteveKing\Tools\Http\Enums\Method;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Ramsey\Collection\Collection;
 use Tripletex\TripletexSDK;
 
 interface ResourceInterface
@@ -14,4 +16,7 @@ interface ResourceInterface
 
     public function attachPayLoad(RequestInterface $request, string $payload): RequestInterface;
 
+    public function createCollection(string $modelClass, array $data): Collection;
+
+    public function sendRequest(RequestInterface $request): ResponseInterface;
 }

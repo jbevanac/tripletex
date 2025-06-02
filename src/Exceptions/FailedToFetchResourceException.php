@@ -2,7 +2,7 @@
 
 namespace Tripletex\Exceptions;
 
-class FailedToFetchResourceException extends \Exception
+class FailedToFetchResourceException extends ApiException
 {
 
 }

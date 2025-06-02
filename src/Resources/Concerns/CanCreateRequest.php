@@ -5,7 +5,11 @@ namespace Tripletex\Resources\Concerns;
 use Http\Discovery\Psr17FactoryDiscovery;
 use JustSteveKing\Tools\Http\Enums\Method;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use Tripletex\Contracts\ResourceInterface;
+use Tripletex\Exceptions\ApiException;
+use Tripletex\Exceptions\FailedToDecodeJsonResponseException;
+use Tripletex\Exceptions\FailedToSendRequestException;
 use Tripletex\Resources\Filters\Filter;
 
 /**
@@ -71,5 +75,42 @@ trait CanCreateRequest
                 content: $payload,
             )
         );
+    }
+
+    /**
+     * @throws FailedToSendRequestException
+     */
+    public function sendRequest(RequestInterface $request): ResponseInterface
+    {
+        try {
+            return $this->getSdk()->client()->sendRequest(
+                request: $request,
+            );
+        } catch (\Throwable $e) {
+            throw new FailedToSendRequestException(
+                message: 'Failed to send request.',
+                previous: $e,
+            );
+        }
+    }
+
+    /**
+    * @throws FailedToDecodeJsonResponseException
+    */
+    function decodeJsonResponse(ResponseInterface $response): array
+    {
+        try {
+            return json_decode(
+                json: $response->getBody()->getContents(),
+                associative: true,
+                flags: JSON_THROW_ON_ERROR,
+            );
+        } catch (\JsonException $e) {
+            throw new FailedToDecodeJsonResponseException(
+                message: 'Invalid JSON response from API',
+                code: $e->getCode(),
+                previous: $e,
+            );
+        }
     }
 }
