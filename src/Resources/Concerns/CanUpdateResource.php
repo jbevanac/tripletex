@@ -11,15 +11,15 @@ use Tripletex\Exceptions\ApiException;
 /**
  * @mixin ResourceInterface
  */
-trait CanCreateResource
+trait CanUpdateResource
 {
     /**
      * @throws ApiException
      */
-    public function createResource(ModelInterface $model, string $path): ErrorResponse|ModelInterface
+    public function updateResource(ModelInterface $model, string $path): ErrorResponse|ModelInterface
     {
         $request = $this->request(
-            method: Method::POST,
+            method: Method::PUT,
             url: $path,
         );
 

@@ -3,10 +3,10 @@
 namespace Tripletex\Resources\Concerns;
 
 use Http\Discovery\Psr17FactoryDiscovery;
-use JustSteveKing\Tools\Http\Enums\Method;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Tripletex\Contracts\ResourceInterface;
+use Tripletex\Enum\Method;
 use Tripletex\Exceptions\FailedToDecodeJsonResponseException;
 use Tripletex\Exceptions\FailedToSendRequestException;
 use Tripletex\Resources\Filters\Filter;
@@ -96,7 +96,7 @@ trait CanCreateRequest
     /**
     * @throws FailedToDecodeJsonResponseException
     */
-    function decodeJsonResponse(ResponseInterface $response): array
+    public function decodeJsonResponse(ResponseInterface $response): array
     {
         try {
             return json_decode(

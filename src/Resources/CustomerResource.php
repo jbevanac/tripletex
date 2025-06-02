@@ -13,6 +13,7 @@ use Tripletex\Resources\Concerns\CanCreateRequest;
 use Tripletex\Resources\Concerns\CanCreateResource;
 use Tripletex\Resources\Concerns\CanFindResource;
 use Tripletex\Resources\Concerns\CanListResource;
+use Tripletex\Resources\Concerns\CanUpdateResource;
 
 final class CustomerResource implements ResourceInterface
 {
@@ -20,6 +21,7 @@ final class CustomerResource implements ResourceInterface
     use CanCreateRequest;
     use CanCreateCollection;
     use CanCreateResource;
+    use CanUpdateResource;
     use CanFindResource;
     use CanListResource;
 
@@ -54,7 +56,7 @@ final class CustomerResource implements ResourceInterface
     {
         return $this->listResource(
             modelClass: Customer::class,
-            path: 'customer/list',
+            path: 'customer',
             filters: $filters,
             page: $page
         );

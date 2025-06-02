@@ -54,7 +54,7 @@ class InvoicesResource implements ResourceInterface
     {
         return $this->listResource(
             modelClass: Invoice::class,
-            path: 'invoice/list',
+            path: 'invoice',
             filters: $filters,
             page: $page
         );

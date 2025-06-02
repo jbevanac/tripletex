@@ -2,10 +2,10 @@
 
 namespace Tripletex\Resources\Concerns;
 
-use JustSteveKing\Tools\Http\Enums\Method;
 use Ramsey\Collection\Collection;
 use Tripletex\Contracts\ModelInterface;
 use Tripletex\Contracts\ResourceInterface;
+use Tripletex\Enum\Method;
 use Tripletex\Model\ErrorResponse;
 use Tripletex\Exceptions\ApiException;
 use Tripletex\Exceptions\FailedToSendRequestException;

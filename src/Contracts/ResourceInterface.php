@@ -2,10 +2,10 @@
 
 namespace Tripletex\Contracts;
 
-use JustSteveKing\Tools\Http\Enums\Method;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Ramsey\Collection\Collection;
+use Tripletex\Enum\Method;
 use Tripletex\TripletexSDK;
 
 interface ResourceInterface

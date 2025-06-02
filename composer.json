@@ -12,7 +12,6 @@
   "license": "MIT",
   "require": {
     "php": "^8.3",
-    "juststeveking/sdk-tools": "^0.0.5",
     "nyholm/psr7": "^1.8",
     "php-http/discovery": "^1.20",
     "psr/http-client-implementation": "*",
