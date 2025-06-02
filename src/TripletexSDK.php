@@ -30,7 +30,7 @@ final class TripletexSDK implements SDKInterface
     private ?string $sessionToken;
 
     public function __construct(
-        private readonly string $url,
+        private readonly string $baseUrl,
         private readonly string $consumerToken,
         private readonly string $employeeToken,
         private ?ClientInterface $client = null,
@@ -69,7 +69,7 @@ final class TripletexSDK implements SDKInterface
             'expirationDate' => $expirationDate,
         ]);
 
-        $uri = rtrim($this->url, '/').self::AUTH_ROUTE.'?'.$query;
+        $uri = rtrim($this->baseUrl, '/').self::AUTH_ROUTE.'?'.$query;
 
         $requestFactory = Psr17FactoryDiscovery::findRequestFactory();
         $request = $requestFactory->createRequest(Method::PUT->value, $uri)
@@ -95,7 +95,7 @@ final class TripletexSDK implements SDKInterface
             return;
         }
 
-        $uri = rtrim($this->url, '/').self::LOGOUT_ROUTE.$this->sessionToken;
+        $uri = rtrim($this->baseUrl, '/').self::LOGOUT_ROUTE.$this->sessionToken;
 
         $requestFactory = Psr17FactoryDiscovery::findRequestFactory();
         $request = $requestFactory->createRequest(Method::DELETE->value, $uri)
@@ -186,7 +186,7 @@ final class TripletexSDK implements SDKInterface
 
     public function getUrl(): string
     {
-        return $this->url;
+        return $this->baseUrl;
     }
 
     public static function getSerializer(): Serializer

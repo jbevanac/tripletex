@@ -5,7 +5,7 @@ use Tripletex\TripletexSDK;
 require '00-setup.php';
 
 $sdk = new TripletexSDK(
-    url: URL,
+    baseUrl: URL,
     consumerToken: CONSUMER_TOKEN,
     employeeToken: EMPLOYEE_TOKEN,
 );
