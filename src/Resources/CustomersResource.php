@@ -42,6 +42,20 @@ final class CustomersResource implements ResourceInterface
     /**
      * @throws ApiException
      */
+    public function update(array $data): Customer|ErrorResponse
+    {
+        /** @var Customer $customer */
+        $customer = Customer::make($data);
+
+        return $this->updateResource(
+            model: $customer,
+            path: 'customer/'.$customer->id,
+        );
+    }
+
+    /**
+     * @throws ApiException
+     */
     public function find(int $id): Customer|ErrorResponse
     {
         return $this->findResource(

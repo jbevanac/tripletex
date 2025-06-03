@@ -7,7 +7,6 @@ use Tripletex\Enum\EmailAttachmentType;
 use Tripletex\Enum\invoicesDueInType;
 use Tripletex\Enum\InvoiceSendMethod;
 use Tripletex\Enum\Language;
-use Tripletex\Reference;
 
 final class Customer implements ModelInterface
 {
@@ -33,7 +32,6 @@ final class Customer implements ModelInterface
         public ?invoicesDueInType $invoicesDueInType,
         public ?Address $postalAddress,
         public ?Address $physicalAddress,
-
     ) {
     }
 

@@ -18,6 +18,7 @@ final class Order implements ModelInterface
         public ?array $orderLines = null,
         public ?bool $isSubscription = null,
         public ?int $subscriptionDuration = null,
+        public ?int $subscriptionPeriodsOnInvoice = null,
         public ?SubscriptionDurationType $subscriptionDurationType = null,
     ) {
     }

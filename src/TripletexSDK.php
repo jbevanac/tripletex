@@ -18,6 +18,8 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Tripletex\Contracts\SDKInterface;
 use Tripletex\Enum\Method;
+use Tripletex\Resources\ContactResource;
+use Tripletex\Resources\CountriesResource;
 use Tripletex\Resources\CustomersResource;
 use Psr\SimpleCache\CacheInterface;
 use Tripletex\Resources\InvoicesResource;
@@ -114,34 +116,6 @@ final class TripletexSDK implements SDKInterface
         return base64_encode("0:$this->sessionToken");
     }
 
-    public function customers(): CustomersResource
-    {
-        return new CustomersResource(
-            sdk: $this,
-        );
-    }
-
-    public function invoices(): InvoicesResource
-    {
-        return new InvoicesResource(
-            sdk: $this
-        );
-    }
-
-    public function orders(): OrdersResource
-    {
-        return new OrdersResource(
-            sdk: $this
-        );
-    }
-
-    public function request(): DebugResource
-    {
-        return new DebugResource(
-            sdk: $this
-        );
-    }
-
     /**
      * @param array<int, Plugin> $plugins
      * @return $this
@@ -204,4 +178,47 @@ final class TripletexSDK implements SDKInterface
 
     }
 
+
+    /* RESOURCES */
+    public function customers(): CustomersResource
+    {
+        return new CustomersResource(
+            sdk: $this,
+        );
+    }
+
+    public function invoices(): InvoicesResource
+    {
+        return new InvoicesResource(
+            sdk: $this
+        );
+    }
+
+    public function orders(): OrdersResource
+    {
+        return new OrdersResource(
+            sdk: $this
+        );
+    }
+
+    public function contacts(): ContactResource
+    {
+        return new ContactResource(
+            sdk: $this,
+        );
+    }
+
+    public function countries(): CountriesResource
+    {
+        return new CountriesResource(
+            sdk: $this,
+        );
+    }
+
+    public function request(): DebugResource
+    {
+        return new DebugResource(
+            sdk: $this
+        );
+    }
 }

@@ -32,7 +32,7 @@ trait CanUpdateResource
         $responseData = $this->decodeJsonResponse($response);
         $data = $responseData['value'] ?? $responseData;
 
-        if (201 == $response->getStatusCode()) {
+        if (200 == $response->getStatusCode()) {
             return $model::make(data: $data);
         }
 
