@@ -14,18 +14,18 @@ final class Contact implements ModelInterface
     use ModelTrait;
 
     public function __construct(
-        public ?int $id,
-        public readonly ?string $url,
-        public ?string $firstName,
-        public ?string $lastName,
-        public ?string $displayName,
-        public ?string $email,
-        public ?Reference $phoneNumberMobileCountry,
-        public ?string $phoneNumberMobile,
-        public ?string $phoneNumberWork,
-        public ?Reference $customer,
-        public ?array $department,
-        public readonly ?bool $isInactive,
+        public ?int $id = null,
+        public ?string $url = null,
+        public ?string $firstName = null,
+        public ?string $lastName = null,
+        public ?string $displayName = null,
+        public ?string $email = null,
+        public ?Reference $phoneNumberMobileCountry = null,
+        public ?string $phoneNumberMobile = null,
+        public ?string $phoneNumberWork = null,
+        public ?Reference $customer = null,
+        public ?array $department = null,
+        public readonly ?bool $isInactive = null,
     ) {
     }
 

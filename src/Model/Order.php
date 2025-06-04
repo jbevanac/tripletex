@@ -15,6 +15,7 @@ final class Order implements ModelInterface
         public string $orderDate,
         public string $deliveryDate,
         public ?int $id = null,
+        public ?array $orderGroups = null,
         public ?array $orderLines = null,
         public ?bool $isSubscription = null,
         public ?int $subscriptionDuration = null,
