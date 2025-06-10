@@ -2,7 +2,10 @@
 
 namespace Tripletex\Resources;
 
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use Tripletex\Contracts\ResourceInterface;
+use Tripletex\Enum\Method;
 use Tripletex\Model\Customer;
 use Tripletex\Model\ErrorResponse;
 use Tripletex\Model\Order;
@@ -74,6 +77,14 @@ final class OrdersResource implements ResourceInterface
             modelClass: Order::class,
             path: 'order/'.$id.$query,
         );
+    }
+
+    public function approveSubscriptionInvoice(int $orderId, \DateTimeInterface $invoiceDate): ResponseInterface
+    {
+        $url = 'order/'.$orderId.'/:approveSubscriptionInvoice';
+        $query = ['invoiceDate' => $invoiceDate->format('Y-m-d')];
+        $request = $this->request(Method::PUT, $url, $query);
+        return $this->sendRequest($request);
     }
 
     /**
