@@ -68,11 +68,10 @@ trait CanCreateRequest
     public function applyFilters(RequestInterface $request, array $filters): RequestInterface
     {
         $uri = $request->getUri();
-        foreach ($filters as $filter) {
-            $uri = $uri->withQuery(
-                query: $filter->toQueryParameter(),
-            );
-        }
+        $uri = $uri->withQuery(
+            query: http_build_query($filters),
+        );
+
 
         return $request->withUri(
             uri: $uri,
