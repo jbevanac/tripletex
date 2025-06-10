@@ -11,9 +11,9 @@ final class Order implements ModelInterface
     use ModelTrait;
 
     public function __construct(
-        public Reference $customer,
-        public string $orderDate,
-        public string $deliveryDate,
+        public ?Reference $customer,
+        public ?string $orderDate,
+        public ?string $deliveryDate,
         public ?int $id = null,
         public ?array $orderGroups = null,
         public ?array $orderLines = null,
@@ -23,5 +23,4 @@ final class Order implements ModelInterface
         public ?SubscriptionDurationType $subscriptionDurationType = null,
     ) {
     }
-
 }

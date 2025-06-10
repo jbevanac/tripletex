@@ -13,18 +13,19 @@ $sdk = new TripletexSDK(
 // List
 $list = $sdk->customers()->list();
 var_dump($list);
+//
+// // Create
+// $customerData = [
+//     'name' => 'Connection',
+//     'email' => 'connection@example.com',
+//     // 'invoiceSendMethod' => 'VIPPS',
+// ];
 
-// Create
-$customerData = [
-    'name' => 'Connection4',
-    'email' => 'connection@example.com',
-    // 'invoiceSendMethod' => 'VIPPS',
-];
-$customer = $sdk->customers()->create($customerData);
-
-$customerCreated = $customer instanceof  \Tripletex\Model\Customer;
-var_dump($customer);
-var_dump($customerCreated);
+// $customer = $sdk->customers()->create($customerData);
+//
+// $customerCreated = $customer instanceof  \Tripletex\Model\Customer;
+// var_dump($customer);
+// var_dump($customerCreated);
 
 
 $sdk->logout();

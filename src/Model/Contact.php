@@ -28,5 +28,4 @@ final class Contact implements ModelInterface
         public readonly ?bool $isInactive = null,
     ) {
     }
-
 }

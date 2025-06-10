@@ -15,6 +15,7 @@ final class OrderLine implements ModelInterface
         public ?string $description = null,
         public ?float $count = null,
         public ?float $unitPriceExcludingVatCurrency = null,
+        public ?VatType $vatType = null,
         public ?bool $isSubscription = null,
         public ?string $subscriptionPeriodStart = null,
         public ?string $subscriptionPeriodEnd = null,
@@ -23,5 +24,4 @@ final class OrderLine implements ModelInterface
         public ?int $subscriptionInvoicingTime = null,
     ) {
     }
-
 }

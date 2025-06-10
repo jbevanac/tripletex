@@ -32,5 +32,4 @@ final class Address implements ModelInterface
         public ?string $unitNumber,
     ) {
     }
-
 }

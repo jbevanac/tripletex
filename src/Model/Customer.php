@@ -34,5 +34,4 @@ final class Customer implements ModelInterface
         public ?Address $physicalAddress,
     ) {
     }
-
 }

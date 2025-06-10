@@ -12,5 +12,4 @@ class Invoice implements ModelInterface
         public int $id,
     ) {
     }
-
 }
