@@ -4,6 +4,8 @@ namespace Tripletex\Model;
 
 use Tripletex\Contracts\ModelInterface;
 use Tripletex\Enum\subscriptionDurationType;
+use Tripletex\Enum\SubscriptionInvoicingTimeInAdvanceOrArrears;
+use Tripletex\Enum\SubscriptionInvoicingTimeType;
 use Tripletex\Reference;
 
 final class Order implements ModelInterface
@@ -21,6 +23,9 @@ final class Order implements ModelInterface
         public ?int $subscriptionDuration = null,
         public ?int $subscriptionPeriodsOnInvoice = null,
         public ?SubscriptionDurationType $subscriptionDurationType = null,
+        public ?SubscriptionInvoicingTimeInAdvanceOrArrears $subscriptionInvoicingTimeInAdvanceOrArrears = null,
+        public ?SubscriptionInvoicingTimeType $subscriptionInvoicingTimeType = null,
+        public ?int $subscriptionInvoicingTime = null,
         public ?Contact $contact = null,
     ) {
     }
