@@ -6,6 +6,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Tripletex\Contracts\ResourceInterface;
 use Tripletex\Enum\Method;
+use Tripletex\Exceptions\FailedToSendRequestException;
 use Tripletex\Model\Customer;
 use Tripletex\Model\ErrorResponse;
 use Tripletex\Model\Order;
@@ -79,11 +80,31 @@ final class OrdersResource implements ResourceInterface
         );
     }
 
+    /**
+     * @throws ApiException
+     */
     public function approveSubscriptionInvoice(int $orderId, \DateTimeInterface $invoiceDate): ResponseInterface
     {
         $url = 'order/'.$orderId.'/:approveSubscriptionInvoice';
         $query = ['invoiceDate' => $invoiceDate->format('Y-m-d')];
-        $request = $this->request(Method::PUT, $url, $query);
+        $request = $this->request(
+            method: Method::PUT,
+            url: $url,
+            query: $query
+        );
+        return $this->sendRequest($request);
+    }
+
+    /**
+     * @throws ApiException
+     */
+    public function unApproveSubscriptionInvoice(int $orderId): ResponseInterface
+    {
+        $url = 'order/'.$orderId.'/:unApproveSubscriptionInvoice';
+        $request = $this->request(
+            method: Method::PUT,
+            url: $url
+        );
         return $this->sendRequest($request);
     }
 

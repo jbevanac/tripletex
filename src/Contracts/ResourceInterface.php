@@ -10,7 +10,7 @@ use Tripletex\TripletexSDK;
 
 interface ResourceInterface
 {
-    public function request(Method $method, string $url): RequestInterface;
+    public function request(Method $method, string $url, array $query = [], ?string $body = null, array $headers = []): RequestInterface;
 
     public function getSdk(): TripletexSDK;
 
