@@ -3,10 +3,9 @@
 namespace Tripletex;
 
 use Http\Client\Common\Plugin\AuthenticationPlugin;
-use Http\Client\Common\Plugin\ErrorPlugin;
 use Http\Client\Common\Plugin\RetryPlugin;
 use Http\Client\Common\PluginClient;
-use Http\Discovery\Composer\Plugin;
+use Http\Client\Common\Plugin;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Discovery\Psr18ClientDiscovery;
 use Http\Message\Authentication\Bearer;
@@ -16,6 +15,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\BackedEnumNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
+use Tripletex\Contracts\Resources;
 use Tripletex\Contracts\SDKInterface;
 use Tripletex\Enum\Method;
 use Tripletex\Resources\ContactResource;
@@ -26,7 +26,7 @@ use Tripletex\Resources\InvoicesResource;
 use Tripletex\Resources\OrdersResource;
 use Tripletex\Resources\DebugResource;
 
-final class TripletexSDK implements SDKInterface
+final class TripletexSDK implements SDKInterface, Resources
 {
     private const string AUTH_ROUTE = '/token/session/:create';
     private const string LOGOUT_ROUTE = '/token/session/';
@@ -133,8 +133,6 @@ final class TripletexSDK implements SDKInterface
     public function defaultPlugins(): array
     {
         return [
-            new RetryPlugin(),
-            new ErrorPlugin(),
             new AuthenticationPlugin(
                 new Bearer(
                     token: $this->sessionToken,
@@ -180,10 +178,32 @@ final class TripletexSDK implements SDKInterface
 
 
     /* RESOURCES */
+
+    public function contacts(): ContactResource
+    {
+        return new ContactResource(
+            sdk: $this,
+        );
+    }
+
+    public function countries(): CountriesResource
+    {
+        return new CountriesResource(
+            sdk: $this,
+        );
+    }
+
     public function customers(): CustomersResource
     {
         return new CustomersResource(
             sdk: $this,
+        );
+    }
+
+    public function debug(): DebugResource
+    {
+        return new DebugResource(
+            sdk: $this
         );
     }
 
@@ -201,24 +221,4 @@ final class TripletexSDK implements SDKInterface
         );
     }
 
-    public function contacts(): ContactResource
-    {
-        return new ContactResource(
-            sdk: $this,
-        );
-    }
-
-    public function countries(): CountriesResource
-    {
-        return new CountriesResource(
-            sdk: $this,
-        );
-    }
-
-    public function request(): DebugResource
-    {
-        return new DebugResource(
-            sdk: $this
-        );
-    }
 }

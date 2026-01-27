@@ -26,7 +26,7 @@ final class CustomersResource implements ResourceInterface
     use CanListResource;
 
     /**
-     * @param array{name: string, email?: string} $data
+     * @param array{name: string, email?: string, organizationNumber?: string, invoiceEmail?: string} $data
      * @throws ApiException
      */
     public function create(array $data): Customer|ErrorResponse
