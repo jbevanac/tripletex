@@ -13,8 +13,6 @@ interface SDKInterface
 
     public function client(): ClientInterface;
 
-    public function setClient(ClientInterface $client): TripletexSDK;
-
     public function getUrl(): string;
 
     public function getToken(): string;

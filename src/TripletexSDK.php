@@ -2,14 +2,13 @@
 
 namespace Tripletex;
 
-use Http\Client\Common\Plugin\AuthenticationPlugin;
-use Http\Client\Common\Plugin\RetryPlugin;
 use Http\Client\Common\PluginClient;
 use Http\Client\Common\Plugin;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Discovery\Psr18ClientDiscovery;
-use Http\Message\Authentication\Bearer;
+use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
+use Psr\SimpleCache\InvalidArgumentException;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\BackedEnumNormalizer;
@@ -18,6 +17,12 @@ use Symfony\Component\Serializer\Serializer;
 use Tripletex\Contracts\Resources;
 use Tripletex\Contracts\SDKInterface;
 use Tripletex\Enum\Method;
+use Tripletex\Exceptions\Configuration\AuthenticationException;
+use Tripletex\Exceptions\Configuration\CacheException;
+use Tripletex\Exceptions\Configuration\ConfigurationException;
+use Tripletex\Exceptions\Configuration\InvalidExpirationDateException;
+use Tripletex\Model\ResponseWrapperSessionToken;
+use Tripletex\Plugins\UserAgentPlugin;
 use Tripletex\Resources\ContactResource;
 use Tripletex\Resources\CountriesResource;
 use Tripletex\Resources\CustomersResource;
@@ -30,41 +35,72 @@ final class TripletexSDK implements SDKInterface, Resources
 {
     private const string AUTH_ROUTE = '/token/session/:create';
     private const string LOGOUT_ROUTE = '/token/session/';
-    private ?string $sessionToken;
+    private ?string $sessionToken = null;
+    private ?int $sessionTokenExpiresAt = null;
+    private ?ClientInterface $client = null;
 
     public function __construct(
         private readonly string $baseUrl,
         private readonly string $consumerToken,
         private readonly string $employeeToken,
-        private ?ClientInterface $client = null,
+        private ?ClientInterface $customClient = null,
         private readonly ?CacheInterface $cache = null,
         private readonly string $cacheKey = 'tripletex_session_token',
         private readonly int $cacheLifeTime = 129600,
         private array $plugins = [],
     ) {
-        $this->loadOrCreateSessionToken();
+        $this->withPlugins($this->plugins);
     }
 
-    private function loadOrCreateSessionToken(): void
+    /**
+     * @throws ConfigurationException
+     */
+    public function loadOrCreateSessionToken(): string
     {
+        // Check in-memory token first
+        if ($this->sessionToken && $this->sessionTokenExpiresAt && $this->sessionTokenExpiresAt > time()) {
+            return $this->sessionToken;
+        }
+
+        // Check cache
         if ($this->cache) {
-            $token = $this->cache->get($this->cacheKey);
-            if ($token) {
-                $this->sessionToken = $token;
-                return;
+            try {
+                $tokenData = $this->cache->get($this->cacheKey);
+            } catch (InvalidArgumentException $e) {
+                throw new CacheException('Invalid Cache configuration or cache key', $e);
+            }
+            if ($tokenData instanceof ResponseWrapperSessionToken) {
+                $expiresAt = $this->expirationDateToUnix($tokenData->expirationDate);
+                if ($expiresAt > time()) {
+                    $this->sessionToken = $tokenData->token;
+                    $this->sessionTokenExpiresAt = $this->expirationDateToUnix($tokenData->expirationDate);
+                    return $this->sessionToken;
+                }
             }
         }
 
-        $token = $this->authenticate();
-        $this->cache?->set($this->cacheKey, $token, $this->cacheLifeTime);
-        $this->sessionToken = $token;
+        // Authenticate
+        $tokenResponse = $this->authenticate();
+        $this->sessionToken = $tokenResponse->token;
+        $this->sessionTokenExpiresAt = $this->expirationDateToUnix($tokenResponse->expirationDate);
+
+        // Cache it
+        try {
+            $ttl = max(0, $this->sessionTokenExpiresAt - time() - 30);
+            $this->cache?->set($this->cacheKey, $tokenResponse, $ttl);
+        } catch (InvalidArgumentException $e) {
+            throw new CacheException('Invalid Cache configuration or cache key', $e);
+        }
+
+        return $this->sessionToken;
     }
 
-    private function authenticate(): string
+    /**
+     * @throws ConfigurationException
+     */
+    private function authenticate(): ResponseWrapperSessionToken
     {
-        $expirationDate = (new \DateTimeImmutable())
-            ->add(new \DateInterval('PT' . $this->cacheLifeTime . 'S'))
-            ->format('Y-m-d');
+        $expirationDate = $this->calculateExpirationDate($this->cacheLifeTime);
 
         $query = http_build_query([
             'consumerToken' => $this->consumerToken,
@@ -75,19 +111,71 @@ final class TripletexSDK implements SDKInterface, Resources
         $uri = rtrim($this->baseUrl, '/').self::AUTH_ROUTE.'?'.$query;
 
         $requestFactory = Psr17FactoryDiscovery::findRequestFactory();
-        $request = $requestFactory->createRequest(Method::PUT->value, $uri)
+        $request = $requestFactory
+            ->createRequest(Method::PUT->value, $uri)
             ->withHeader('Accept', 'application/json');
 
-        $response = $this->client()->sendRequest($request);
+        $client = new PluginClient(
+            client: $this->customClient ?? Psr18ClientDiscovery::find(),
+            plugins: array_filter(
+                $this->plugins,
+                fn($plugin) => $plugin instanceof UserAgentPlugin
+            )
+        );
+
+        try {
+            $response = $client->sendRequest($request);
+        } catch (ClientExceptionInterface $e) {
+            throw new ConfigurationException('Failed to authenticate with Tripletex API', $e);
+        }
 
         $body = (string) $response->getBody();
         $data = json_decode($body, true);
+        $status = $response->getStatusCode();
 
-        if (!isset($data['value']['token'])) {
-            throw new \RuntimeException("Unable to authenticate with Tripletex API: " . $body);
+        if (200 === $status) {
+            return ResponseWrapperSessionToken::make($data['value']);
         }
 
-        return $data['value']['token'];
+        throw new AuthenticationException("Unable to authenticate with Tripletex API: " . $body);
+    }
+
+    /**
+     * @throws InvalidExpirationDateException
+     */
+    private function expirationDateToUnix(?string $date): int
+    {
+        if (!$date) {
+            throw new InvalidExpirationDateException('Missing expiration date in token response');
+        }
+
+        try {
+            // Tripletex expires at CET midnight when the date changes
+            $dt = new \DateTimeImmutable(
+                $date . ' 00:00:00',
+                new \DateTimeZone('Europe/Oslo') // CET/CEST safe
+            );
+        } catch (\Exception) {
+            throw new InvalidExpirationDateException('Invalid expiration date in token response');
+        }
+
+        return $dt->getTimestamp();
+    }
+
+    private function calculateExpirationDate(int $lifetimeSeconds): string
+    {
+        $now = new \DateTimeImmutable('now', new \DateTimeZone('Europe/Oslo'));
+
+        // Desired expiration moment
+        $desiredExpiration = $now->add(new \DateInterval('PT' . $lifetimeSeconds . 'S'));
+
+        /**
+         * Tripletex expires at CET midnight when the date changes.
+         * So we must send the *date after* the desired expiration moment.
+         */
+        return $desiredExpiration
+            ->modify('+1 day')
+            ->format('Y-m-d');
     }
 
     public function logout(): void
@@ -133,33 +221,24 @@ final class TripletexSDK implements SDKInterface, Resources
     public function defaultPlugins(): array
     {
         return [
-            new AuthenticationPlugin(
-                new Bearer(
-                    token: $this->sessionToken,
-                )
-            )
+            new Plugin\HeaderAppendPlugin([
+                'Accept' => 'application/json',
+            ]),
         ];
     }
 
     public function client(): ClientInterface
     {
-        if ($this->client !== null) {
-            return $this->client;
+        if ($this->customClient !== null) {
+            return $this->customClient;
         }
 
-        $this->client = new PluginClient(
+        $this->customClient = new PluginClient(
             client: Psr18ClientDiscovery::find(),
             plugins: $this->plugins,
         );
 
-        return $this->client;
-    }
-
-    public function setClient(ClientInterface $client): TripletexSDK
-    {
-        $this->client = $client;
-
-        return $this;
+        return $this->customClient;
     }
 
     public function getUrl(): string
@@ -175,7 +254,6 @@ final class TripletexSDK implements SDKInterface, Resources
         );
 
     }
-
 
     /* RESOURCES */
 
