@@ -2,7 +2,7 @@
 
 namespace Tripletex\Exceptions;
 
-class FailedToSendRequestException extends ApiException
+class FailedToSendRequestException extends TripletexException
 {
 
 }

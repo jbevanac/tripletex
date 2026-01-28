@@ -7,7 +7,7 @@ use Tripletex\Contracts\ModelInterface;
 use Tripletex\Contracts\ResourceInterface;
 use Tripletex\Enum\Method;
 use Tripletex\Model\ErrorResponse;
-use Tripletex\Exceptions\ApiException;
+use Tripletex\Exceptions\TripletexException;
 use Tripletex\Exceptions\FailedToSendRequestException;
 
 /**
@@ -17,7 +17,7 @@ trait CanListResource
 {
     /**
      * @throws FailedToSendRequestException
-     * @throws ApiException
+     * @throws TripletexException
      */
     public function listResource(string $modelClass, array|string $path, array $filters = [], ?int $page = null): ModelInterface|Collection
     {

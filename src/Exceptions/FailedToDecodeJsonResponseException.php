@@ -2,7 +2,7 @@
 
 namespace Tripletex\Exceptions;
 
-class FailedToDecodeJsonResponseException extends ApiException
+class FailedToDecodeJsonResponseException extends TripletexException
 {
 
 }

@@ -2,7 +2,7 @@
 
 namespace Tripletex\Exceptions;
 
-class FailedToCreateResourceException extends ApiException
+class FailedToCreateResourceException extends TripletexException
 {
 
 }

@@ -10,7 +10,7 @@ use Tripletex\Exceptions\FailedToSendRequestException;
 use Tripletex\Model\Customer;
 use Tripletex\Model\ErrorResponse;
 use Tripletex\Model\Order;
-use Tripletex\Exceptions\ApiException;
+use Tripletex\Exceptions\TripletexException;
 use Tripletex\Exceptions\FailedToCreateResourceException;
 use Tripletex\Model\OrderGroup;
 use Tripletex\Resources\Concerns\CanAccessSDK;
@@ -32,7 +32,7 @@ final class OrdersResource implements ResourceInterface
     /**
      * @param array{customer: int, orderDate: string, deliveryDate: string} $data
      * @throws FailedToCreateResourceException
-     * @throws ApiException
+     * @throws TripletexException
      */
     public function create(array $data): Order|ErrorResponse
     {
@@ -45,7 +45,7 @@ final class OrdersResource implements ResourceInterface
     }
 
     /**
-     * @throws ApiException
+     * @throws TripletexException
      */
     public function update(array $data): Order|ErrorResponse
     {
@@ -69,7 +69,7 @@ final class OrdersResource implements ResourceInterface
         );
     }
     /**
-     * @throws ApiException
+     * @throws TripletexException
      */
     public function find(int $id, ?string $fields): Order|ErrorResponse
     {
@@ -81,7 +81,7 @@ final class OrdersResource implements ResourceInterface
     }
 
     /**
-     * @throws ApiException
+     * @throws TripletexException
      */
     public function approveSubscriptionInvoice(int $orderId, \DateTimeInterface $invoiceDate): ResponseInterface
     {
@@ -96,7 +96,7 @@ final class OrdersResource implements ResourceInterface
     }
 
     /**
-     * @throws ApiException
+     * @throws TripletexException
      */
     public function unApproveSubscriptionInvoice(int $orderId): ResponseInterface
     {
@@ -107,17 +107,4 @@ final class OrdersResource implements ResourceInterface
         );
         return $this->sendRequest($request);
     }
-
-    /**
-     * @throws ApiException
-     */
-    public function findRaw(int $id): array
-    {
-        return $this->findResource(
-            modelClass: Order::class,
-            path: 'order/'.$id,
-            raw: true,
-        );
-    }
-
 }

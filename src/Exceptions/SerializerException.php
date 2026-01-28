@@ -2,7 +2,7 @@
 
 namespace Tripletex\Exceptions;
 
-class SerializerException extends ApiException
+class SerializerException extends TripletexException
 {
 
 }

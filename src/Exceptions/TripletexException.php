@@ -2,7 +2,7 @@
 
 namespace Tripletex\Exceptions;
 
-class ApiException extends \Exception
+class TripletexException extends \Exception
 {
 
 }

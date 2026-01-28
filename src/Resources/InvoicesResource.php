@@ -6,7 +6,7 @@ use Ramsey\Collection\Collection;
 use Tripletex\Contracts\ResourceInterface;
 use Tripletex\Model\ErrorResponse;
 use Tripletex\Model\Invoice;
-use Tripletex\Exceptions\ApiException;
+use Tripletex\Exceptions\TripletexException;
 use Tripletex\Resources\Concerns\CanAccessSDK;
 use Tripletex\Resources\Concerns\CanCreateCollection;
 use Tripletex\Resources\Concerns\CanCreateRequest;
@@ -24,7 +24,7 @@ class InvoicesResource implements ResourceInterface
     use CanListResource;
 
     /**
-     * @throws ApiException
+     * @throws TripletexException
      */
     public function create(array $data): Invoice|ErrorResponse
     {
@@ -37,7 +37,7 @@ class InvoicesResource implements ResourceInterface
     }
 
     /**
-     * @throws ApiException
+     * @throws TripletexException
      */
     public function find(int $id): Invoice|ErrorResponse
     {
@@ -47,21 +47,8 @@ class InvoicesResource implements ResourceInterface
         );
     }
 
-
     /**
-     * @throws ApiException
-     */
-    public function findRaw(int $id): array
-    {
-        return $this->findResource(
-            modelClass: Invoice::class,
-            path: 'invoice/'.$id,
-            raw: true,
-        );
-    }
-
-    /**
-     * @throws ApiException
+     * @throws TripletexException
      */
     public function list(array $filters = [], ?int $page = null): Collection|ErrorResponse
     {

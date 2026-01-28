@@ -9,7 +9,7 @@ use Tripletex\Exceptions\FailedToDecodeJsonResponseException;
 use Tripletex\Exceptions\FailedToSendRequestException;
 use Tripletex\Model\Customer;
 use Tripletex\Model\ErrorResponse;
-use Tripletex\Exceptions\ApiException;
+use Tripletex\Exceptions\TripletexException;
 use Tripletex\Resources\Concerns\CanAccessSDK;
 use Tripletex\Resources\Concerns\CanCreateCollection;
 use Tripletex\Resources\Concerns\CanCreateRequest;
@@ -24,7 +24,7 @@ final class DebugResource
     use CanCreateRequest;
 
     /**
-     * @throws ApiException
+     * @throws TripletexException
      */
     public function getDebugData(string $url): array
     {

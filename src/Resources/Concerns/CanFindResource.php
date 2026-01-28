@@ -6,7 +6,7 @@ use Tripletex\Contracts\ModelInterface;
 use Tripletex\Contracts\ResourceInterface;
 use Tripletex\Enum\Method;
 use Tripletex\Model\ErrorResponse;
-use Tripletex\Exceptions\ApiException;
+use Tripletex\Exceptions\TripletexException;
 
 /**
  * @mixin ResourceInterface
@@ -15,7 +15,7 @@ trait CanFindResource
 {
     /**
      *
-     * @throws ApiException
+     * @throws TripletexException
      */
     public function findResource(string $modelClass, array|string $path, bool $raw = false): ModelInterface|ErrorResponse|array
     {

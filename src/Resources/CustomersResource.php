@@ -6,7 +6,7 @@ use Ramsey\Collection\Collection;
 use Tripletex\Contracts\ResourceInterface;
 use Tripletex\Model\Customer;
 use Tripletex\Model\ErrorResponse;
-use Tripletex\Exceptions\ApiException;
+use Tripletex\Exceptions\TripletexException;
 use Tripletex\Resources\Concerns\CanAccessSDK;
 use Tripletex\Resources\Concerns\CanCreateCollection;
 use Tripletex\Resources\Concerns\CanCreateRequest;
@@ -27,7 +27,7 @@ final class CustomersResource implements ResourceInterface
 
     /**
      * @param array{name: string, email?: string, organizationNumber?: string, invoiceEmail?: string} $data
-     * @throws ApiException
+     * @throws TripletexException
      */
     public function create(array $data): Customer|ErrorResponse
     {
@@ -40,7 +40,7 @@ final class CustomersResource implements ResourceInterface
     }
 
     /**
-     * @throws ApiException
+     * @throws TripletexException
      */
     public function update(array $data): Customer|ErrorResponse
     {
@@ -54,7 +54,7 @@ final class CustomersResource implements ResourceInterface
     }
 
     /**
-     * @throws ApiException
+     * @throws TripletexException
      */
     public function find(int $id): Customer|ErrorResponse
     {
@@ -65,19 +65,7 @@ final class CustomersResource implements ResourceInterface
     }
 
     /**
-     * @throws ApiException
-     */
-    public function findRaw(int $id): array
-    {
-        return $this->findResource(
-            modelClass: Customer::class,
-            path: 'customer/'.$id,
-            raw: true,
-        );
-    }
-
-    /**
-     * @throws ApiException
+     * @throws TripletexException
      */
     public function list(array $filters = [], ?int $page = null): Collection|ErrorResponse
     {

@@ -2,9 +2,9 @@
 
 namespace Tripletex\Exceptions\Configuration;
 
-use Tripletex\Exceptions\ApiException;
+use Tripletex\Exceptions\TripletexException;
 
-class ConfigurationException extends ApiException
+class ConfigurationException extends TripletexException
 {
 
 }

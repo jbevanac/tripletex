@@ -6,7 +6,7 @@ use Tripletex\Contracts\ModelInterface;
 use Tripletex\Contracts\ResourceInterface;
 use Tripletex\Enum\Method;
 use Tripletex\Model\ErrorResponse;
-use Tripletex\Exceptions\ApiException;
+use Tripletex\Exceptions\TripletexException;
 
 /**
  * @mixin ResourceInterface
@@ -14,7 +14,7 @@ use Tripletex\Exceptions\ApiException;
 trait CanCreateResource
 {
     /**
-     * @throws ApiException
+     * @throws TripletexException
      */
     public function createResource(ModelInterface $model, array|string $path): ErrorResponse|ModelInterface
     {

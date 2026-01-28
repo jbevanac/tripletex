@@ -4,7 +4,7 @@ namespace Tripletex\Model;
 
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Tripletex\Contracts\ModelInterface;
-use Tripletex\Exceptions\ApiException;
+use Tripletex\Exceptions\TripletexException;
 use Tripletex\Exceptions\SerializerException;
 use Tripletex\TripletexSDK;
 
@@ -12,7 +12,7 @@ trait ModelTrait
 {
 
     /**
-     * @throws ApiException
+     * @throws TripletexException
      */
     public function toJson(): string
     {
@@ -30,7 +30,7 @@ trait ModelTrait
     /**
      * @param array $data
      * @return ModelInterface
-     * @throws ApiException
+     * @throws TripletexException
      */
     public static function make(array $data): ModelInterface
     {
