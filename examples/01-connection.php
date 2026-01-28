@@ -11,7 +11,7 @@ $cacheLifeTime = 3600;
 
 // PSR-6 cache (FilesystemAdapter)
 $psr6Cache = new FilesystemAdapter(
-    namespace: 'turnover',
+    namespace: 'tripletex',
     defaultLifetime: $cacheLifeTime,
     directory: CACHE_DIR
 );

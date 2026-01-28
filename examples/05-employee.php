@@ -12,7 +12,7 @@ $cacheLifeTime = 3600;
 
 // PSR-6 cache (FilesystemAdapter)
 $psr6Cache = new FilesystemAdapter(
-    namespace: 'turnover',
+    namespace: 'tripletex',
     defaultLifetime: $cacheLifeTime,
     directory: CACHE_DIR
 );
@@ -42,6 +42,7 @@ if ($list->count() > 0) {
     dump($lastName);
 
     $employee = $sdk->employee()->find($list->first()->id);
+    dump($employee->id);
     dump($employee->firstName);
     dd($employee->lastName);
 }

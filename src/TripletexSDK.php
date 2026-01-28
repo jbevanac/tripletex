@@ -40,6 +40,7 @@ final class TripletexSDK implements SDKInterface, Resources
     private const string AUTH_ROUTE = '/token/session/:create';
     private const string LOGOUT_ROUTE = '/token/session/';
     private const string WHO_AM_I_ROUTE = '/token/session/>whoAmI';
+
     private ?string $sessionToken = null;
     private ?int $sessionTokenExpiresAt = null;
     private ?ClientInterface $client = null;
@@ -107,22 +108,27 @@ final class TripletexSDK implements SDKInterface, Resources
     {
         $expirationDate = $this->calculateExpirationDate($this->cacheLifeTime);
 
-        $query = http_build_query([
+        $body = json_encode([
             'consumerToken' => $this->consumerToken,
             'employeeToken' => $this->employeeToken,
             'expirationDate' => $expirationDate,
         ]);
 
-        $uri = rtrim($this->baseUrl, '/').self::AUTH_ROUTE.'?'.$query;
+        $uri = rtrim($this->baseUrl, '/').self::AUTH_ROUTE;
 
         $requestFactory = Psr17FactoryDiscovery::findRequestFactory();
-        $request = $requestFactory->createRequest(Method::POST->value, $uri);
+        $streamFactory = Psr17FactoryDiscovery::findStreamFactory();
+
+        $request = $requestFactory
+            ->createRequest(Method::POST->value, $uri)
+            ->withHeader('Content-Type', 'application/json')
+            ->withBody($streamFactory->createStream($body));
 
         $client = new PluginClient(
             client: $this->customClient ?? Psr18ClientDiscovery::find(),
             plugins: array_filter(
                 $this->plugins,
-                fn($plugin) => $plugin instanceof UserAgentPlugin
+                fn($plugin) => $plugin instanceof UserAgentPlugin || $plugin instanceof Plugin\HeaderAppendPlugin
             )
         );
 
@@ -136,7 +142,7 @@ final class TripletexSDK implements SDKInterface, Resources
         $data = json_decode($body, true);
         $status = $response->getStatusCode();
 
-        if (200 === $status) {
+        if (201 === $status) {
             return SessionToken::make($data['value']);
         }
 
@@ -206,7 +212,7 @@ final class TripletexSDK implements SDKInterface, Resources
             client: $this->customClient ?? Psr18ClientDiscovery::find(),
             plugins: array_filter(
                 $this->plugins,
-                fn($plugin) => $plugin instanceof UserAgentPlugin
+                fn($plugin) => $plugin instanceof UserAgentPlugin || $plugin instanceof Plugin\HeaderAppendPlugin
             )
         );
 
