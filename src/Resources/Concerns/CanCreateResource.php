@@ -18,13 +18,12 @@ trait CanCreateResource
      */
     public function createResource(ModelInterface $model, array|string $path): ErrorResponse|ModelInterface
     {
-        $request = $this->request(
-            method: Method::POST,
-            url: $path,
-        );
-
         $request = $this->attachPayLoad(
-            request: $request,
+            request: $this->request(
+                method: Method::POST,
+                url: $path,
+                headers: ['Content-Type' => 'application/json; charset=utf-8']
+            ),
             payload: $model->toJson(),
         );
 
