@@ -3,6 +3,7 @@
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\Psr16Cache;
 use Tripletex\Plugins\UserAgentPlugin;
+use Tripletex\Query\Filters\FieldsFilter;
 use Tripletex\TripletexSDK;
 
 require '00-setup.php';
@@ -30,11 +31,17 @@ $sdk = new TripletexSDK(
 );
 
 // List
-$list = $sdk->employee()->list();
+$list = $sdk->employee()->list([
+    new FieldsFilter(['id, firstName']),
+]);
 
 if ($list->count() > 0) {
     $firstName = $list->first()->firstName;
+    $lastName = $list->first()->lastName;
     dump($firstName);
+    dump($lastName);
+
     $employee = $sdk->employee()->find($list->first()->id);
-    dd($employee->firstName);
+    dump($employee->firstName);
+    dd($employee->lastName);
 }

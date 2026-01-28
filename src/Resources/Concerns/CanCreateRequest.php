@@ -5,12 +5,13 @@ namespace Tripletex\Resources\Concerns;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Tripletex\Contracts\FilterInterface;
 use Tripletex\Contracts\ResourceInterface;
 use Tripletex\Enum\Method;
 use Tripletex\Exceptions\FailedToDecodeJsonResponseException;
 use Tripletex\Exceptions\FailedToSendRequestException;
 use Tripletex\Plugins\LazyAuthenticationPlugin;
-use Tripletex\Resources\Filters\Filter;
+use Tripletex\Query\Filters\FieldsFilter;
 
 /**
  * @mixin ResourceInterface
@@ -61,16 +62,26 @@ trait CanCreateRequest
 
     /**
      * @param RequestInterface $request
-     * @param array<int,Filter> $filters
+     * @param array<int,FilterInterface|scalar|array> $filters
      * @return RequestInterface
      */
     public function applyFilters(RequestInterface $request, array $filters): RequestInterface
     {
-        $uri = $request->getUri();
-        $uri = $uri->withQuery(
-            query: http_build_query($filters),
-        );
+        $query = [];
 
+        foreach ($filters as $key => $value) {
+            if ($value instanceof FilterInterface) {
+                $query = array_merge($query, $value->toQuery());
+            } elseif (is_array($value)) {
+                $query[$key] = implode(',', $value);
+            } else {
+                $query[$key] = $value;
+            }
+        }
+
+        $uri = $request->getUri()->withQuery(
+            query: http_build_query($query),
+        );
 
         return $request->withUri(
             uri: $uri,
