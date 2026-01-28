@@ -14,13 +14,13 @@ final class Country implements ModelInterface
     use ModelTrait;
 
     public function __construct(
-        public readonly ?int $id,
-        public readonly ?string $url,
-        public readonly ?string $name,
-        public readonly ?string $displayName,
-        public readonly ?string $isoAlpha2Code,
-        public readonly ?string $isoAlpha3Code,
-        public readonly ?string $isoNumericCode,
+        public ?int $id = null,
+        public ?string $url = null,
+        public ?string $name = null,
+        public ?string $displayName = null,
+        public ?string $isoAlpha2Code = null,
+        public ?string $isoAlpha3Code = null,
+        public ?string $isoNumericCode = null,
     ) {
     }
 }

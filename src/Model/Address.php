@@ -20,7 +20,7 @@ final class Address implements ModelInterface
         public ?string $addressLine2,
         public ?string $postalCode,
         public ?string $city,
-        public ?array $country,
+        public ?Country $country,
         public readonly ?string $displayName,
         public readonly ?string $addressAsString,
         public readonly ?string $displayNameInklMatrikkel,
