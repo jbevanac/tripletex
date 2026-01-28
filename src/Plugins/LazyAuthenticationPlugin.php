@@ -19,7 +19,7 @@ final readonly class LazyAuthenticationPlugin implements Plugin
     {
         $token = $this->sdk->loadOrCreateSessionToken();
         $token = base64_encode("0:$token");
-        $request = $request->withHeader('Authorization', 'Bearer ' . $token);
+        $request = $request->withHeader('Authorization', 'Basic ' . $token);
 
         return $next($request);
     }

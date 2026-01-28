@@ -21,7 +21,7 @@ use Tripletex\Exceptions\Configuration\AuthenticationException;
 use Tripletex\Exceptions\Configuration\CacheException;
 use Tripletex\Exceptions\Configuration\ConfigurationException;
 use Tripletex\Exceptions\Configuration\InvalidExpirationDateException;
-use Tripletex\Model\ResponseWrapperSessionToken;
+use Tripletex\Model\SessionToken;
 use Tripletex\Plugins\UserAgentPlugin;
 use Tripletex\Resources\ContactResource;
 use Tripletex\Resources\CountriesResource;
@@ -43,7 +43,7 @@ final class TripletexSDK implements SDKInterface, Resources
         private readonly string $baseUrl,
         private readonly string $consumerToken,
         private readonly string $employeeToken,
-        private ?ClientInterface $customClient = null,
+        private readonly ?ClientInterface $customClient = null,
         private readonly ?CacheInterface $cache = null,
         private readonly string $cacheKey = 'tripletex_session_token',
         private readonly int $cacheLifeTime = 129600,
@@ -69,7 +69,7 @@ final class TripletexSDK implements SDKInterface, Resources
             } catch (InvalidArgumentException $e) {
                 throw new CacheException('Invalid Cache configuration or cache key', $e);
             }
-            if ($tokenData instanceof ResponseWrapperSessionToken) {
+            if ($tokenData instanceof SessionToken) {
                 $expiresAt = $this->expirationDateToUnix($tokenData->expirationDate);
                 if ($expiresAt > time()) {
                     $this->sessionToken = $tokenData->token;
@@ -98,7 +98,7 @@ final class TripletexSDK implements SDKInterface, Resources
     /**
      * @throws ConfigurationException
      */
-    private function authenticate(): ResponseWrapperSessionToken
+    private function authenticate(): SessionToken
     {
         $expirationDate = $this->calculateExpirationDate($this->cacheLifeTime);
 
@@ -111,9 +111,7 @@ final class TripletexSDK implements SDKInterface, Resources
         $uri = rtrim($this->baseUrl, '/').self::AUTH_ROUTE.'?'.$query;
 
         $requestFactory = Psr17FactoryDiscovery::findRequestFactory();
-        $request = $requestFactory
-            ->createRequest(Method::PUT->value, $uri)
-            ->withHeader('Accept', 'application/json');
+        $request = $requestFactory->createRequest(Method::PUT->value, $uri);
 
         $client = new PluginClient(
             client: $this->customClient ?? Psr18ClientDiscovery::find(),
@@ -134,7 +132,7 @@ final class TripletexSDK implements SDKInterface, Resources
         $status = $response->getStatusCode();
 
         if (200 === $status) {
-            return ResponseWrapperSessionToken::make($data['value']);
+            return SessionToken::make($data['value']);
         }
 
         throw new AuthenticationException("Unable to authenticate with Tripletex API: " . $body);
@@ -162,13 +160,19 @@ final class TripletexSDK implements SDKInterface, Resources
         return $dt->getTimestamp();
     }
 
+    /**
+     * @throws ConfigurationException
+     */
     private function calculateExpirationDate(int $lifetimeSeconds): string
     {
-        $now = new \DateTimeImmutable('now', new \DateTimeZone('Europe/Oslo'));
+        try {
+            $now = new \DateTimeImmutable('now', new \DateTimeZone('Europe/Oslo'));
 
-        // Desired expiration moment
-        $desiredExpiration = $now->add(new \DateInterval('PT' . $lifetimeSeconds . 'S'));
-
+            // Desired expiration moment
+            $desiredExpiration = $now->add(new \DateInterval('PT' . $lifetimeSeconds . 'S'));
+        } catch (\Exception) {
+            throw new ConfigurationException('Invalid expiration date, try adjusting cacheLifeTime');
+        }
         /**
          * Tripletex expires at CET midnight when the date changes.
          * So we must send the *date after* the desired expiration moment.
@@ -178,6 +182,9 @@ final class TripletexSDK implements SDKInterface, Resources
             ->format('Y-m-d');
     }
 
+    /**
+     * @throws ConfigurationException
+     */
     public function logout(): void
     {
         // If using a cache, assume token might be reused and skip logout
@@ -188,20 +195,25 @@ final class TripletexSDK implements SDKInterface, Resources
         $uri = rtrim($this->baseUrl, '/').self::LOGOUT_ROUTE.$this->sessionToken;
 
         $requestFactory = Psr17FactoryDiscovery::findRequestFactory();
-        $request = $requestFactory->createRequest(Method::DELETE->value, $uri)
-            ->withHeader('Accept', 'application/json')
-            ->withHeader('Authorization', 'Basic '.$this->getToken());
+        $request = $requestFactory->createRequest(Method::DELETE->value, $uri);
 
-        $response = $this->client()->sendRequest($request);
+        $client = new PluginClient(
+            client: $this->customClient ?? Psr18ClientDiscovery::find(),
+            plugins: array_filter(
+                $this->plugins,
+                fn($plugin) => $plugin instanceof UserAgentPlugin
+            )
+        );
+
+        try {
+            $response = $client->sendRequest($request);
+        } catch (ClientExceptionInterface $e) {
+            throw new ConfigurationException('Failed to authenticate with Tripletex API.', $e);
+        }
 
         if ($response->getStatusCode() !== 204) {
-            // throw new \RuntimeException('Did not log out');
+            throw new ConfigurationException('Did not log out from Tripletex API.');
         }
-    }
-
-    public function getToken(): string
-    {
-        return base64_encode("0:$this->sessionToken");
     }
 
     /**
@@ -229,16 +241,17 @@ final class TripletexSDK implements SDKInterface, Resources
 
     public function client(): ClientInterface
     {
-        if ($this->customClient !== null) {
-            return $this->customClient;
+        if (null !== $this->client) {
+            return $this->client;
         }
 
-        $this->customClient = new PluginClient(
-            client: Psr18ClientDiscovery::find(),
+        $httpClient = $this->customClient ?? Psr18ClientDiscovery::find();
+        $this->client = new PluginClient(
+            client: $httpClient,
             plugins: $this->plugins,
         );
 
-        return $this->customClient;
+        return $this->client;
     }
 
     public function getUrl(): string

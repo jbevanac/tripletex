@@ -9,6 +9,7 @@ use Tripletex\Contracts\ResourceInterface;
 use Tripletex\Enum\Method;
 use Tripletex\Exceptions\FailedToDecodeJsonResponseException;
 use Tripletex\Exceptions\FailedToSendRequestException;
+use Tripletex\Plugins\LazyAuthenticationPlugin;
 use Tripletex\Resources\Filters\Filter;
 
 /**
@@ -29,7 +30,12 @@ trait CanCreateRequest
         return 'https://' . $baseUrl . '/' . $url;
     }
 
-    public function request(Method $method, string $url, array $query = [], ?string $body = null, array $headers = []): RequestInterface {
+    public function request(Method $method, array|string $url, array $query = [], ?string $body = null, array $headers = []): RequestInterface
+    {
+        if (is_array($url)) {
+            $url = implode('/', array_map(fn($s) => trim((string)$s, '/'), $url));
+        }
+
         $uri = $this->prepareUrl($url);
 
         if (!empty($query)) {
@@ -44,13 +50,6 @@ trait CanCreateRequest
         if ($body !== null) {
             $stream = $streamFactory->createStream($body);
             $request = $request->withBody($stream);
-        }
-
-        if (!isset($headers['Authorization'])) {
-            $headers['Authorization'] = 'Basic ' . $this->getSdk()->getToken();
-        }
-        if (!isset($headers['Content-Type'])){
-            $headers['Content-Type'] = 'application/json';
         }
 
         foreach ($headers as $name => $value) {
@@ -91,12 +90,13 @@ trait CanCreateRequest
     /**
      * @throws FailedToSendRequestException
      */
-    public function sendRequest(RequestInterface $request): ResponseInterface
+    public function sendRequest(RequestInterface $request, bool $authenticate = true): ResponseInterface
     {
+        $plugins = $authenticate ? [new LazyAuthenticationPlugin($this->getSdk())] : [];
+        $sdk = $this->getSdk()->withPlugins($plugins);
+
         try {
-            return $this->getSdk()->client()->sendRequest(
-                request: $request,
-            );
+            return $sdk->client()->sendRequest(request: $request);
         } catch (\Throwable $e) {
             throw new FailedToSendRequestException(
                 message: 'Failed to send request.',

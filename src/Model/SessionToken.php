@@ -4,7 +4,7 @@ namespace Tripletex\Model;
 
 use Tripletex\Contracts\ModelInterface;
 
-final class ResponseWrapperSessionToken implements ModelInterface
+final class SessionToken implements ModelInterface
 {
     public function __construct(
         public ?int $id,
@@ -26,7 +26,7 @@ final class ResponseWrapperSessionToken implements ModelInterface
         ]);
     }
 
-    public static function make(array $data): ResponseWrapperSessionToken
+    public static function make(array $data): SessionToken
     {
         return new self(
             id: $data['id'],

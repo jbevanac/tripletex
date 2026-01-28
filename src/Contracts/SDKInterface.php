@@ -14,6 +14,4 @@ interface SDKInterface
     public function client(): ClientInterface;
 
     public function getUrl(): string;
-
-    public function getToken(): string;
 }
