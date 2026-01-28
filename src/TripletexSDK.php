@@ -21,6 +21,7 @@ use Tripletex\Exceptions\Configuration\AuthenticationException;
 use Tripletex\Exceptions\Configuration\CacheException;
 use Tripletex\Exceptions\Configuration\ConfigurationException;
 use Tripletex\Exceptions\Configuration\InvalidExpirationDateException;
+use Tripletex\Exceptions\SerializerException;
 use Tripletex\Exceptions\TripletexException;
 use Tripletex\Model\LoggedInUserInfo;
 use Tripletex\Model\SessionToken;
@@ -60,6 +61,7 @@ final class TripletexSDK implements SDKInterface, Resources
 
     /**
      * @throws ConfigurationException
+     * @throws SerializerException
      */
     public function loadOrCreateSessionToken(): string
     {
@@ -103,6 +105,7 @@ final class TripletexSDK implements SDKInterface, Resources
 
     /**
      * @throws ConfigurationException
+     * @throws SerializerException
      */
     private function authenticate(): SessionToken
     {
@@ -249,9 +252,7 @@ final class TripletexSDK implements SDKInterface, Resources
         $status = $response->getStatusCode();
 
         if (200 === $status) {
-            /** @var LoggedInUserInfo $userInfo */
-            $userInfo = LoggedInUserInfo::make($data);
-            return $userInfo;
+            return LoggedInUserInfo::make($data);
         }
 
         throw new ConfigurationException('Failed to figure out who you are with Tripletex API.');

@@ -3,11 +3,6 @@
 namespace Tripletex\Model;
 
 use Tripletex\Contracts\ModelInterface;
-use Tripletex\Enum\EmailAttachmentType;
-use Tripletex\Enum\invoicesDueInType;
-use Tripletex\Enum\InvoiceSendMethod;
-use Tripletex\Enum\Language;
-use Tripletex\Reference;
 
 final class Address implements ModelInterface
 {

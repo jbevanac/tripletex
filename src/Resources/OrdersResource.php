@@ -48,7 +48,6 @@ final class OrdersResource implements ResourceInterface
      */
     public function update(array $data): Order|ErrorResponse
     {
-        /** @var Order $order */
         $order = Order::make($data);
 
         return $this->updateResource(
@@ -62,7 +61,6 @@ final class OrdersResource implements ResourceInterface
      */
     public function addOrderGroup(array $data): OrderGroup|ErrorResponse
     {
-        /** @var OrderGroup $orderGroup */
         $orderGroup = OrderGroup::make($data);
 
         return $this->createResource(

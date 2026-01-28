@@ -2,11 +2,11 @@
 
 namespace Tripletex\Resources;
 
-use Ramsey\Collection\Collection;
 use Tripletex\Contracts\ResourceInterface;
 use Tripletex\Model\ErrorResponse;
 use Tripletex\Model\Invoice;
 use Tripletex\Exceptions\TripletexException;
+use Tripletex\Model\ListResponse;
 use Tripletex\Resources\Concerns\CanAccessSDK;
 use Tripletex\Resources\Concerns\CanCreateCollection;
 use Tripletex\Resources\Concerns\CanCreateRequest;
@@ -52,13 +52,12 @@ class InvoicesResource implements ResourceInterface
     /**
      * @throws TripletexException
      */
-    public function list(array $filters = [], ?int $page = null): Collection|ErrorResponse
+    public function list(array $filters = []): ListResponse|ErrorResponse
     {
         return $this->listResource(
             modelClass: Invoice::class,
             path: self::PATH,
             filters: $filters,
-            page: $page
         );
     }
 }

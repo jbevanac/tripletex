@@ -18,7 +18,7 @@ final class Employee implements ModelInterface
         public ?string $employeeNumber,
         public ?string $dateOfBirth,
         public ?string $email,
-        public ?array $phoneNumberMobileCountry,
+        public ?Country $phoneNumberMobileCountry,
         public ?string $phoneNumberMobile,
         public ?string $phoneNumberHome,
         public ?string $phoneNumberWork,

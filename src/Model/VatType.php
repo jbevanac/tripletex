@@ -3,8 +3,6 @@
 namespace Tripletex\Model;
 
 use Tripletex\Contracts\ModelInterface;
-use Tripletex\Enum\SubscriptionInvoicingTimeInAdvanceOrArrears;
-use Tripletex\Reference;
 
 final class VatType implements ModelInterface
 {

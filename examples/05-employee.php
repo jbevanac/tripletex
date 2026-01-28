@@ -31,18 +31,8 @@ $sdk = new TripletexSDK(
 );
 
 // List
-$list = $sdk->employee()->list([
-    new FieldsFilter(['id, firstName']),
+$listResponse = $sdk->employee()->list([
+    new FieldsFilter(['employeeNumber']),
 ]);
 
-if ($list->count() > 0) {
-    $firstName = $list->first()->firstName;
-    $lastName = $list->first()->lastName;
-    dump($firstName);
-    dump($lastName);
-
-    $employee = $sdk->employee()->find($list->first()->id);
-    dump($employee->id);
-    dump($employee->firstName);
-    dd($employee->lastName);
-}
+dd($listResponse);
