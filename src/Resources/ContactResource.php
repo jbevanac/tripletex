@@ -17,6 +17,8 @@ use Tripletex\Resources\Concerns\CanUpdateResource;
 
 final class ContactResource implements ResourceInterface
 {
+    private const string PATH = 'contact';
+
     use CanAccessSDK;
     use CanCreateRequest;
     use CanCreateCollection;
@@ -35,7 +37,7 @@ final class ContactResource implements ResourceInterface
 
         return $this->createResource(
             model: $contact,
-            path: 'contact',
+            path: self::PATH,
         );
     }
 
@@ -46,7 +48,7 @@ final class ContactResource implements ResourceInterface
     {
         return $this->findResource(
             modelClass: Contact::class,
-            path: 'contact/'.$id,
+            path: [self::PATH, $id],
         );
     }
 
@@ -57,10 +59,9 @@ final class ContactResource implements ResourceInterface
     {
         return $this->listResource(
             modelClass: Contact::class,
-            path: 'contact',
+            path: self::PATH,
             filters: $filters,
             page: $page
         );
     }
-
 }

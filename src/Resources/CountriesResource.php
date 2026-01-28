@@ -17,6 +17,8 @@ use Tripletex\Resources\Concerns\CanUpdateResource;
 
 final class CountriesResource implements ResourceInterface
 {
+    private const string PATH = 'country';
+
     use CanAccessSDK;
     use CanCreateRequest;
     use CanCreateCollection;
@@ -31,7 +33,7 @@ final class CountriesResource implements ResourceInterface
     {
         return $this->findResource(
             modelClass: Country::class,
-            path: 'country/'.$id,
+            path: [self::PATH, $id],
         );
     }
 
@@ -42,7 +44,7 @@ final class CountriesResource implements ResourceInterface
     {
         return $this->listResource(
             modelClass: Country::class,
-            path: 'country',
+            path: self::PATH,
             filters: $filters,
             page: $page
         );

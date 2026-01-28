@@ -17,23 +17,22 @@ trait CanFindResource
      *
      * @throws TripletexException
      */
-    public function findResource(string $modelClass, array|string $path, bool $raw = false): ModelInterface|ErrorResponse|array
+    public function findResource(string $modelClass, array|string $path, array $filters = []): ModelInterface|ErrorResponse|array
     {
         if (!is_subclass_of($modelClass, ModelInterface::class)) {
             throw new \InvalidArgumentException("$modelClass must implement ModelInterface");
         }
 
-        $request = $this->request(
-            method: Method::GET,
-            url: $path,
+        $request = $this->applyFilters(
+            request: $this->request(
+                method: Method::GET,
+                url: $path,
+            ),
+            filters: $filters,
         );
 
         $response = $this->sendRequest($request);
         $responseData = $this->decodeJsonResponse($response);
-
-        if ($raw) {
-            return $responseData;
-        }
 
         $data = $responseData['value'] ?? $responseData;
         if (200 == $response->getStatusCode()) {

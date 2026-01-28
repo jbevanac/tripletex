@@ -4,7 +4,6 @@ namespace Tripletex\Resources;
 
 use Ramsey\Collection\Collection;
 use Tripletex\Contracts\ResourceInterface;
-use Tripletex\Model\Contact;
 use Tripletex\Model\Employee;
 use Tripletex\Model\ErrorResponse;
 use Tripletex\Exceptions\TripletexException;

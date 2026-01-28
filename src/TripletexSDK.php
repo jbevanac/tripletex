@@ -30,7 +30,6 @@ use Psr\SimpleCache\CacheInterface;
 use Tripletex\Resources\InvoicesResource;
 use Tripletex\Resources\OrdersResource;
 use Tripletex\Resources\EmployeeResource;
-use Tripletex\Resources\DebugResource;
 
 final class TripletexSDK implements SDKInterface, Resources
 {
@@ -289,13 +288,6 @@ final class TripletexSDK implements SDKInterface, Resources
     {
         return new CustomersResource(
             sdk: $this,
-        );
-    }
-
-    public function debug(): DebugResource
-    {
-        return new DebugResource(
-            sdk: $this
         );
     }
 

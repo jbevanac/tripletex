@@ -16,7 +16,7 @@ trait CanUpdateResource
     /**
      * @throws TripletexException
      */
-    public function updateResource(ModelInterface $model, string $path): ErrorResponse|ModelInterface
+    public function updateResource(ModelInterface $model, array|string $path): ErrorResponse|ModelInterface
     {
         $request = $this->request(
             method: Method::PUT,

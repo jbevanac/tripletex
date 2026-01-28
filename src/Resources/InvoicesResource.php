@@ -16,6 +16,8 @@ use Tripletex\Resources\Concerns\CanListResource;
 
 class InvoicesResource implements ResourceInterface
 {
+    private const string PATH = 'invoice';
+
     use CanAccessSDK;
     use CanCreateRequest;
     use CanCreateCollection;
@@ -32,7 +34,7 @@ class InvoicesResource implements ResourceInterface
 
         return $this->createResource(
             model: $invoice,
-            path: 'invoice',
+            path: self::PATH,
         );
     }
 
@@ -43,7 +45,7 @@ class InvoicesResource implements ResourceInterface
     {
         return $this->findResource(
             modelClass: Invoice::class,
-            path: 'invoice/'.$id,
+            path: [self::PATH, $id],
         );
     }
 
@@ -54,7 +56,7 @@ class InvoicesResource implements ResourceInterface
     {
         return $this->listResource(
             modelClass: Invoice::class,
-            path: 'invoice',
+            path: self::PATH,
             filters: $filters,
             page: $page
         );

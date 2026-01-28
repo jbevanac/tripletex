@@ -2,12 +2,9 @@
 
 namespace Tripletex\Resources;
 
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Tripletex\Contracts\ResourceInterface;
 use Tripletex\Enum\Method;
-use Tripletex\Exceptions\FailedToSendRequestException;
-use Tripletex\Model\Customer;
 use Tripletex\Model\ErrorResponse;
 use Tripletex\Model\Order;
 use Tripletex\Exceptions\TripletexException;
@@ -22,6 +19,8 @@ use Tripletex\Resources\Concerns\CanUpdateResource;
 
 final class OrdersResource implements ResourceInterface
 {
+    private const string PATH = 'order';
+
     use CanAccessSDK;
     use CanCreateRequest;
     use CanUpdateResource;
@@ -40,7 +39,7 @@ final class OrdersResource implements ResourceInterface
 
         return $this->createResource(
             model: $order,
-            path: 'order',
+            path: self::PATH,
         );
     }
 
@@ -54,10 +53,13 @@ final class OrdersResource implements ResourceInterface
 
         return $this->updateResource(
             model: $order,
-            path: 'order/'.$order->id,
+            path: [self::PATH, $order->id],
         );
     }
 
+    /**
+     * @throws TripletexException
+     */
     public function addOrderGroup(array $data): OrderGroup|ErrorResponse
     {
         /** @var OrderGroup $orderGroup */
@@ -65,18 +67,18 @@ final class OrdersResource implements ResourceInterface
 
         return $this->createResource(
             model: $orderGroup,
-            path: 'order/orderGroup',
+            path: [self::PATH, 'orderGroup'],
         );
     }
     /**
      * @throws TripletexException
      */
-    public function find(int $id, ?string $fields): Order|ErrorResponse
+    public function find(int $id, array $filters = []): Order|ErrorResponse
     {
-        $query = $fields ? '?fields='.$fields : '';
         return $this->findResource(
             modelClass: Order::class,
-            path: 'order/'.$id.$query,
+            path: [self::PATH, $id],
+            filters: $filters,
         );
     }
 
@@ -85,12 +87,11 @@ final class OrdersResource implements ResourceInterface
      */
     public function approveSubscriptionInvoice(int $orderId, \DateTimeInterface $invoiceDate): ResponseInterface
     {
-        $url = 'order/'.$orderId.'/:approveSubscriptionInvoice';
         $query = ['invoiceDate' => $invoiceDate->format('Y-m-d')];
         $request = $this->request(
             method: Method::PUT,
-            url: $url,
-            query: $query
+            url: [self::PATH, $orderId, ':approveSubscriptionInvoice'],
+            query: $query,
         );
         return $this->sendRequest($request);
     }
@@ -100,10 +101,9 @@ final class OrdersResource implements ResourceInterface
      */
     public function unApproveSubscriptionInvoice(int $orderId): ResponseInterface
     {
-        $url = 'order/'.$orderId.'/:unApproveSubscriptionInvoice';
         $request = $this->request(
             method: Method::PUT,
-            url: $url
+            url: [self::PATH, $orderId, ':unApproveSubscriptionInvoice'],
         );
         return $this->sendRequest($request);
     }

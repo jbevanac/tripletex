@@ -11,7 +11,6 @@ use Tripletex\Enum\Method;
 use Tripletex\Exceptions\FailedToDecodeJsonResponseException;
 use Tripletex\Exceptions\FailedToSendRequestException;
 use Tripletex\Plugins\LazyAuthenticationPlugin;
-use Tripletex\Query\Filters\FieldsFilter;
 
 /**
  * @mixin ResourceInterface
