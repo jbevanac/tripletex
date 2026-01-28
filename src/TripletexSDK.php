@@ -21,8 +21,12 @@ use Tripletex\Exceptions\Configuration\AuthenticationException;
 use Tripletex\Exceptions\Configuration\CacheException;
 use Tripletex\Exceptions\Configuration\ConfigurationException;
 use Tripletex\Exceptions\Configuration\InvalidExpirationDateException;
+use Tripletex\Exceptions\TripletexException;
+use Tripletex\Model\LoggedInUserInfo;
 use Tripletex\Model\SessionToken;
+use Tripletex\Plugins\LazyAuthenticationPlugin;
 use Tripletex\Plugins\UserAgentPlugin;
+use Tripletex\Query\Filters\FieldsFilter;
 use Tripletex\Resources\ContactResource;
 use Tripletex\Resources\CountriesResource;
 use Tripletex\Resources\CustomersResource;
@@ -35,6 +39,7 @@ final class TripletexSDK implements SDKInterface, Resources
 {
     private const string AUTH_ROUTE = '/token/session/:create';
     private const string LOGOUT_ROUTE = '/token/session/';
+    private const string WHO_AM_I_ROUTE = '/token/session/>whoAmI';
     private ?string $sessionToken = null;
     private ?int $sessionTokenExpiresAt = null;
     private ?ClientInterface $client = null;
@@ -214,6 +219,37 @@ final class TripletexSDK implements SDKInterface, Resources
         if ($response->getStatusCode() !== 204) {
             throw new ConfigurationException('Did not log out from Tripletex API.');
         }
+    }
+
+    /**
+     * @throws ConfigurationException
+     * @throws TripletexException
+     */
+    public function whoAmI(?FieldsFilter $fieldsFilter = null): LoggedInUserInfo
+    {
+        $uri = rtrim($this->baseUrl, '/').self::WHO_AM_I_ROUTE;
+
+        $requestFactory = Psr17FactoryDiscovery::findRequestFactory();
+        $request = $requestFactory->createRequest(Method::GET->value, $uri);
+
+        try {
+            $response = $this->withPlugins([new LazyAuthenticationPlugin($this)])->client()->sendRequest($request);
+        } catch (ClientExceptionInterface $e) {
+            throw new ConfigurationException('Failed to figure out who you are with Tripletex API.', $e);
+        }
+
+        $body = (string) $response->getBody();
+        $data = json_decode($body, true);
+        $status = $response->getStatusCode();
+
+        if (200 === $status) {
+            /** @var LoggedInUserInfo $userInfo */
+            $userInfo = LoggedInUserInfo::make($data);
+            return $userInfo;
+        }
+
+        throw new ConfigurationException('Failed to figure out who you are with Tripletex API.');
+
     }
 
     /**

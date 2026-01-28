@@ -29,7 +29,7 @@ try {
         plugins: [new UserAgentPlugin('jbevanac/tripletex')],
     );
 
-    $sdk->loadOrCreateSessionToken();
+    dump($sdk->whoAmI());
     dd('Connected successfully');
 } catch (Exception $e) {
     dd($e);
