@@ -111,7 +111,7 @@ final class TripletexSDK implements SDKInterface, Resources
         $uri = rtrim($this->baseUrl, '/').self::AUTH_ROUTE.'?'.$query;
 
         $requestFactory = Psr17FactoryDiscovery::findRequestFactory();
-        $request = $requestFactory->createRequest(Method::PUT->value, $uri);
+        $request = $requestFactory->createRequest(Method::POST->value, $uri);
 
         $client = new PluginClient(
             client: $this->customClient ?? Psr18ClientDiscovery::find(),
