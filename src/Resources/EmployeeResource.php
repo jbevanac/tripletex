@@ -3,10 +3,12 @@
 namespace Tripletex\Resources;
 
 use Tripletex\Contracts\ResourceInterface;
+use Tripletex\Model\Customer;
 use Tripletex\Model\Employee;
 use Tripletex\Model\ErrorResponse;
 use Tripletex\Exceptions\TripletexException;
 use Tripletex\Model\ListResponse;
+use Tripletex\Query\Filters\FieldsFilter;
 use Tripletex\Resources\Concerns\CanAccessSDK;
 use Tripletex\Resources\Concerns\CanCreateCollection;
 use Tripletex\Resources\Concerns\CanCreateListResponse;
@@ -46,11 +48,23 @@ final class EmployeeResource implements ResourceInterface
     /**
      * @throws TripletexException
      */
-    public function find(int $id): Employee|ErrorResponse
+    public function update(array $data, string|int $id): Employee|ErrorResponse
+    {
+        return $this->updateResource(
+            model: Employee::make($data),
+            path: [self::PATH, $id],
+        );
+    }
+
+    /**
+     * @throws TripletexException
+     */
+    public function find(int $id, ?FieldsFilter $fieldsFilter = null): Employee|ErrorResponse
     {
         return $this->findResource(
             modelClass: Employee::class,
             path: [self::PATH, $id],
+            filters: $fieldsFilter ? [$fieldsFilter] : [],
         );
     }
 
