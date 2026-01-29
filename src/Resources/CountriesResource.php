@@ -9,6 +9,7 @@ use Tripletex\Exceptions\TripletexException;
 use Tripletex\Model\ListResponse;
 use Tripletex\Resources\Concerns\CanAccessSDK;
 use Tripletex\Resources\Concerns\CanCreateCollection;
+use Tripletex\Resources\Concerns\CanCreateListResponse;
 use Tripletex\Resources\Concerns\CanCreateRequest;
 use Tripletex\Resources\Concerns\CanFindResource;
 use Tripletex\Resources\Concerns\CanListResource;
@@ -24,6 +25,7 @@ final class CountriesResource implements ResourceInterface
     use CanUpdateResource;
     use CanFindResource;
     use CanListResource;
+    use CanCreateListResponse;
 
     /**
      * @throws TripletexException
