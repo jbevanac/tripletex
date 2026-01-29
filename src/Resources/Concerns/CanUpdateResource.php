@@ -18,13 +18,12 @@ trait CanUpdateResource
      */
     public function updateResource(ModelInterface $model, array|string $path): ErrorResponse|ModelInterface
     {
-        $request = $this->request(
-            method: Method::PUT,
-            url: $path,
-        );
-
         $request = $this->attachPayLoad(
-            request: $request,
+            request: $this->request(
+                method: Method::PUT,
+                url: $path,
+                headers: ['Content-Type' => 'application/json; charset=utf-8']
+            ),
             payload: $model->toJson(),
         );
 
