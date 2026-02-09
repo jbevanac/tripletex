@@ -35,6 +35,7 @@ use Psr\SimpleCache\CacheInterface;
 use Tripletex\Resources\InvoicesResource;
 use Tripletex\Resources\OrdersResource;
 use Tripletex\Resources\EmployeeResource;
+use Tripletex\Resources\WebhookResource;
 
 final class TripletexSDK implements SDKInterface, Resources
 {
@@ -351,6 +352,13 @@ final class TripletexSDK implements SDKInterface, Resources
     public function orders(): OrdersResource
     {
         return new OrdersResource(
+            sdk: $this
+        );
+    }
+
+    public function webhook(): WebhookResource
+    {
+        return new WebhookResource(
             sdk: $this
         );
     }

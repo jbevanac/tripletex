@@ -8,6 +8,7 @@ use Tripletex\Resources\CustomersResource;
 use Tripletex\Resources\EmployeeResource;
 use Tripletex\Resources\InvoicesResource;
 use Tripletex\Resources\OrdersResource;
+use Tripletex\Resources\WebhookResource;
 
 interface Resources
 {
@@ -22,4 +23,6 @@ interface Resources
     public function invoices(): InvoicesResource;
 
     public function orders(): OrdersResource;
+
+    public function webhook(): WebhookResource;
 }
