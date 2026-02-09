@@ -2,9 +2,7 @@
 
 namespace Tripletex;
 
-use Tripletex\Exceptions\Configuration\AuthenticationException;
 use Tripletex\Exceptions\SerializerException;
-use Tripletex\Exceptions\TripletexException;
 
 final readonly class WebhookEvent
 {
@@ -19,15 +17,12 @@ final readonly class WebhookEvent
 
     /**
      * @throws SerializerException
-     * @throws AuthenticationException
      */
-    public static function fromPayload(string $payload, ?string $expected, ?string $received): self
+    public static function fromPayload(string $payload): self
     {
-        self::authenticate($expected, $received);
-
         try {
             $payload = json_decode($payload, true, 512, JSON_THROW_ON_ERROR);
-        } catch (\JsonException $e) {
+        } catch (\JsonException) {
             throw new SerializerException('Invalid Tripletex webhook payload');
         }
 
@@ -44,16 +39,6 @@ final readonly class WebhookEvent
         );
     }
 
-    /**
-     * @throws AuthenticationException
-     */
-    private static function authenticate(string $expected, $received): void
-    {
-        if (!hash_equals($expected, $received)) {
-            throw new AuthenticationException('Failed to authenticate webhook');
-        }
-    }
-
     public function getSubscriptionId(): int
     {
         return $this->subscriptionId;
@@ -67,14 +52,6 @@ final readonly class WebhookEvent
     public function getObjectId(): int|string
     {
         return $this->objectId;
-    }
-
-    /**
-     * Stable idempotency key for event logging
-     */
-    public function getEventId(): string
-    {
-        return sprintf('%s:%s', $this->eventType, $this->objectId);
     }
 
     public function getValue(): ?array
