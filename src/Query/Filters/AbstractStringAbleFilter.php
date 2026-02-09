@@ -8,9 +8,9 @@ abstract class AbstractStringAbleFilter implements FilterInterface
 {
     protected array $stringAbles;
 
-    public function __construct(int|string|array $stringsAble)
+    public function __construct(int|string|array $stringAble)
     {
-        $this->stringAbles = is_array($stringsAble) ? $stringsAble : [$stringsAble];
+        $this->stringAbles = is_array($stringAble) ? $stringAble : [$stringAble];
     }
 
     abstract protected function name(): string;
