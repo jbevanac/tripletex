@@ -3,7 +3,6 @@
 namespace Tripletex\Resources;
 
 use Tripletex\Contracts\ResourceInterface;
-use Tripletex\Model\Customer;
 use Tripletex\Model\Employee;
 use Tripletex\Model\ErrorResponse;
 use Tripletex\Exceptions\TripletexException;
