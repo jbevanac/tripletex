@@ -23,11 +23,9 @@ trait CanFindResource
             throw new \InvalidArgumentException("$modelClass must implement ModelInterface");
         }
 
-        $request = $this->applyFilters(
-            request: $this->request(
-                method: Method::GET,
-                url: $path,
-            ),
+        $request = $this->request(
+            method: Method::GET,
+            url: $path,
             filters: $filters,
         );
 

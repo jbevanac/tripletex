@@ -17,8 +17,12 @@ use Tripletex\Plugins\LazyAuthenticationPlugin;
  */
 trait CanCreateRequest
 {
-    public function prepareUrl(string $url): string
+    private function prepareUrl(array|string $url): string
     {
+        if (is_array($url)) {
+            $url = implode('/', array_map(fn($s) => trim((string)$s, '/'), $url));
+        }
+
         $baseUrl = str_replace('https://', '', rtrim($this->getSdk()->getUrl(), '/'));
         $url = str_replace('https://', '', trim($url, '/'));
 
@@ -27,33 +31,26 @@ trait CanCreateRequest
             $url = ltrim(substr($url, strlen($baseUrl)), '/');
         }
 
-        return 'https://' . $baseUrl . '/' . $url;
+        return 'https://'.$baseUrl.'/'.$url;
     }
 
-    public function request(Method $method, array|string $url, array $query = [], ?string $body = null, array $headers = []): RequestInterface
+    public function request(Method $method, array|string $url, array $filters = [], ?string $body = null, array $headers = []): RequestInterface
     {
-        if (is_array($url)) {
-            $url = implode('/', array_map(fn($s) => trim((string)$s, '/'), $url));
-        }
-
         $uri = $this->prepareUrl($url);
 
-        if (!empty($query)) {
-            $uri .= '?' . http_build_query($query);
-        }
-
         $requestFactory = Psr17FactoryDiscovery::findRequestFactory();
-        $streamFactory = Psr17FactoryDiscovery::findStreamFactory();
-
         $request = $requestFactory->createRequest($method->value, $uri);
-
-        if ($body !== null) {
-            $stream = $streamFactory->createStream($body);
-            $request = $request->withBody($stream);
-        }
 
         foreach ($headers as $name => $value) {
             $request = $request->withHeader($name, $value);
+        }
+
+        if (!empty($filters)) {
+            $request = $this->applyFilters($request, $filters);
+        }
+
+        if (null !== $body) {
+            $request = $this->attachPayLoad($request, $body);
         }
 
         return $request;
@@ -64,7 +61,7 @@ trait CanCreateRequest
      * @param array<int,FilterInterface|scalar|array> $filters
      * @return RequestInterface
      */
-    public function applyFilters(RequestInterface $request, array $filters): RequestInterface
+    private function applyFilters(RequestInterface $request, array $filters): RequestInterface
     {
         $query = [];
 
@@ -88,7 +85,7 @@ trait CanCreateRequest
         );
     }
 
-    public function attachPayLoad(RequestInterface $request, string $payload): RequestInterface
+    private function attachPayLoad(RequestInterface $request, string $payload): RequestInterface
     {
         return $request->withBody(
             body: Psr17FactoryDiscovery::findStreamFactory()->createStream(

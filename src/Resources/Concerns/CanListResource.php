@@ -25,12 +25,10 @@ trait CanListResource
             throw new \InvalidArgumentException("$modelClass must implement ModelInterface");
         }
 
-        $request = $this->applyFilters(
-            request: $this->request(
-                method: Method::GET,
-                url: $path,
-            ),
-            filters: $filters
+        $request = $this->request(
+            method: Method::GET,
+            url: $path,
+            filters: $filters,
         );
 
         $response = $this->sendRequest($request);
