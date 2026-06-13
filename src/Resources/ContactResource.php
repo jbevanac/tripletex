@@ -9,6 +9,7 @@ use Tripletex\Exceptions\TripletexException;
 use Tripletex\Model\ListResponse;
 use Tripletex\Resources\Concerns\CanAccessSDK;
 use Tripletex\Resources\Concerns\CanCreateCollection;
+use Tripletex\Resources\Concerns\CanCreateListResponse;
 use Tripletex\Resources\Concerns\CanCreateRequest;
 use Tripletex\Resources\Concerns\CanCreateResource;
 use Tripletex\Resources\Concerns\CanFindResource;
@@ -26,6 +27,7 @@ final class ContactResource implements ResourceInterface
     use CanUpdateResource;
     use CanFindResource;
     use CanListResource;
+    use CanCreateListResponse;
 
     /**
      * @param array{name: string, email?: string} $data
