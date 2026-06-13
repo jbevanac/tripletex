@@ -30,7 +30,24 @@ final class CustomersResource implements ResourceInterface
     use CanListResource;
 
     /**
-     * @param array{name: string, email?: string, organizationNumber?: string, invoiceEmail?: string} $data
+     * @param array{
+     *     name: string,
+     *     customerNumber?: int,
+     *     isPrivateIndividual?: bool,
+     *     email?: string,
+     *     invoiceEmail?: string,
+     *     overdueNoticeEmail?: string,
+     *     organizationNumber?: string,
+     *     phoneNumber?: string,
+     *     phoneNumberMobile?: string,
+     *     language?: string,
+     *     invoiceSendMethod?: string,
+     *     emailAttachmentType?: string,
+     *     invoicesDueIn?: int,
+     *     invoicesDueInType?: string,
+     *     postalAddress?: array,
+     *     physicalAddress?: array,
+     * } $data
      * @throws TripletexException
      */
     public function create(array $data): Customer|ErrorResponse
@@ -44,6 +61,25 @@ final class CustomersResource implements ResourceInterface
     }
 
     /**
+     * @param array{
+     *     version?: int,
+     *     name?: string,
+     *     customerNumber?: int,
+     *     isPrivateIndividual?: bool,
+     *     email?: string,
+     *     invoiceEmail?: string,
+     *     overdueNoticeEmail?: string,
+     *     organizationNumber?: string,
+     *     phoneNumber?: string,
+     *     phoneNumberMobile?: string,
+     *     language?: string,
+     *     invoiceSendMethod?: string,
+     *     emailAttachmentType?: string,
+     *     invoicesDueIn?: int,
+     *     invoicesDueInType?: string,
+     *     postalAddress?: array,
+     *     physicalAddress?: array,
+     * } $data
      * @throws TripletexException
      */
     public function update(int $id, array $data): Customer|ErrorResponse
