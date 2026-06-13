@@ -88,7 +88,6 @@ final class OrdersResource implements ResourceInterface
 
     /**
      * @param array{
-     *     id: int,
      *     version?: int,
      *     customer?: int,
      *     orderDate?: string,
@@ -134,13 +133,11 @@ final class OrdersResource implements ResourceInterface
      * } $data
      * @throws TripletexException
      */
-    public function update(array $data): Order|ErrorResponse
+    public function update(int $id, array $data): Order|ErrorResponse
     {
-        $order = Order::make($data);
-
         return $this->updateResource(
-            model: $order,
-            path: [self::PATH, $order->id],
+            model: Order::make($data),
+            path: [self::PATH, $id],
         );
     }
 

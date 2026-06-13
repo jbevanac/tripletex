@@ -47,7 +47,7 @@ final class EmployeeResource implements ResourceInterface
     /**
      * @throws TripletexException
      */
-    public function update(array $data, string|int $id): Employee|ErrorResponse
+    public function update(int $id, array $data): Employee|ErrorResponse
     {
         return $this->updateResource(
             model: Employee::make($data),

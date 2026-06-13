@@ -46,13 +46,11 @@ final class CustomersResource implements ResourceInterface
     /**
      * @throws TripletexException
      */
-    public function update(array $data): Customer|ErrorResponse
+    public function update(int $id, array $data): Customer|ErrorResponse
     {
-        $customer = Customer::make($data);
-
         return $this->updateResource(
-            model: $customer,
-            path: [self::PATH, $customer->id],
+            model: Customer::make($data),
+            path: [self::PATH, $id],
         );
     }
 
