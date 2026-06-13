@@ -147,18 +147,6 @@ final class OrdersResource implements ResourceInterface
     /**
      * @throws TripletexException
      */
-    public function addOrderGroup(array $data): OrderGroup|ErrorResponse
-    {
-        $orderGroup = OrderGroup::make($data);
-
-        return $this->createResource(
-            model: $orderGroup,
-            path: [self::PATH, 'orderGroup'],
-        );
-    }
-    /**
-     * @throws TripletexException
-     */
     public function find(int $id, array $filters = []): Order|ErrorResponse
     {
         return $this->findResource(
@@ -192,5 +180,51 @@ final class OrdersResource implements ResourceInterface
             url: [self::PATH, $orderId, ':unApproveSubscriptionInvoice'],
         );
         return $this->sendRequest($request);
+    }
+
+    /* OrderGroups
+     * order/orderGroup
+     * */
+
+    /**
+     * @param array{
+     *     order: int,
+     *     title?: string,
+     *     comment?: string,
+     *     sortIndex?: int,
+     *     orderLines?: list<array{
+     *         product?: int,
+     *         inventory?: int,
+     *         inventoryLocation?: int,
+     *         description?: string,
+     *         count?: float,
+     *         unitCostCurrency?: float,
+     *         unitPriceExcludingVatCurrency?: float,
+     *         unitPriceIncludingVatCurrency?: float,
+     *         currency?: int,
+     *         markup?: float,
+     *         discount?: float,
+     *         vatType?: int,
+     *         vendor?: int,
+     *         isSubscription?: bool,
+     *         subscriptionPeriodStart?: string,
+     *         subscriptionPeriodEnd?: string,
+     *         sortIndex?: int,
+     *         isPicked?: bool,
+     *         pickedDate?: string,
+     *         orderedQuantity?: float,
+     *         isCharged?: bool,
+     *     }>,
+     * } $data
+     * @throws TripletexException
+     */
+    public function addOrderGroup(array $data): OrderGroup|ErrorResponse
+    {
+        $orderGroup = OrderGroup::make($data);
+
+        return $this->createResource(
+            model: $orderGroup,
+            path: [self::PATH, 'orderGroup'],
+        );
     }
 }
