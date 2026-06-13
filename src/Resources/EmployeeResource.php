@@ -31,7 +31,32 @@ final class EmployeeResource implements ResourceInterface
     use CanCreateListResponse;
 
     /**
-     * @param array{name: string, email?: string} $data
+     * @param array{
+     *     firstName: string,
+     *     lastName: string,
+     *     employeeNumber?: string,
+     *     dateOfBirth?: string,
+     *     email?: string,
+     *     phoneNumberMobileCountry?: int,
+     *     phoneNumberMobile?: string,
+     *     phoneNumberHome?: string,
+     *     phoneNumberWork?: string,
+     *     nationalIdentityNumber?: string,
+     *     dnumber?: string,
+     *     bankAccountNumber?: string,
+     *     iban?: string,
+     *     bic?: string,
+     *     creditorBankCountryId?: int,
+     *     usesAbroadPayment?: bool,
+     *     userType?: string,
+     *     allowInformationRegistration?: bool,
+     *     isContact?: bool,
+     *     isProxy?: bool,
+     *     comments?: string,
+     *     address?: array,
+     *     department?: array,
+     *     employments?: array,
+     * } $data
      * @throws TripletexException
      */
     public function create(array $data): Employee|ErrorResponse
@@ -45,6 +70,33 @@ final class EmployeeResource implements ResourceInterface
     }
 
     /**
+     * @param array{
+     *     version?: int,
+     *     firstName?: string,
+     *     lastName?: string,
+     *     employeeNumber?: string,
+     *     dateOfBirth?: string,
+     *     email?: string,
+     *     phoneNumberMobileCountry?: int,
+     *     phoneNumberMobile?: string,
+     *     phoneNumberHome?: string,
+     *     phoneNumberWork?: string,
+     *     nationalIdentityNumber?: string,
+     *     dnumber?: string,
+     *     bankAccountNumber?: string,
+     *     iban?: string,
+     *     bic?: string,
+     *     creditorBankCountryId?: int,
+     *     usesAbroadPayment?: bool,
+     *     userType?: string,
+     *     allowInformationRegistration?: bool,
+     *     isContact?: bool,
+     *     isProxy?: bool,
+     *     comments?: string,
+     *     address?: array,
+     *     department?: array,
+     *     employments?: array,
+     * } $data
      * @throws TripletexException
      */
     public function update(int $id, array $data): Employee|ErrorResponse
