@@ -9,6 +9,7 @@ use Tripletex\Exceptions\TripletexException;
 use Tripletex\Model\ListResponse;
 use Tripletex\Resources\Concerns\CanAccessSDK;
 use Tripletex\Resources\Concerns\CanCreateCollection;
+use Tripletex\Resources\Concerns\CanCreateListResponse;
 use Tripletex\Resources\Concerns\CanCreateRequest;
 use Tripletex\Resources\Concerns\CanCreateResource;
 use Tripletex\Resources\Concerns\CanFindResource;
@@ -21,6 +22,7 @@ class InvoicesResource implements ResourceInterface
     use CanAccessSDK;
     use CanCreateRequest;
     use CanCreateCollection;
+    use CanCreateListResponse;
     use CanCreateResource;
     use CanFindResource;
     use CanListResource;

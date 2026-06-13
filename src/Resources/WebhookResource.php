@@ -13,7 +13,7 @@ use Tripletex\Model\Subscription;
 use Tripletex\Query\Filters\FieldsFilter;
 use Tripletex\Resources\Concerns\CanAccessSDK;
 use Tripletex\Resources\Concerns\CanCreateCollection;
-use Tripletex\Resources\Concerns\CanCreateListResponse;
+use Tripletex\Resources\Concerns\CanBulkListResource;
 use Tripletex\Resources\Concerns\CanCreateRequest;
 use Tripletex\Resources\Concerns\CanCreateResource;
 use Tripletex\Resources\Concerns\CanDeleteResource;
@@ -31,7 +31,7 @@ final class WebhookResource implements ResourceInterface
     use CanCreateCollection;
     use CanDeleteResource;
     use CanListResource;
-    use CanCreateListResponse;
+    use CanBulkListResource;
 
     /**
      * @param array{

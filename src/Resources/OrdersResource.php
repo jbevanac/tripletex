@@ -85,11 +85,11 @@ final class OrdersResource implements ResourceInterface
      */
     public function approveSubscriptionInvoice(int $orderId, \DateTimeInterface $invoiceDate): ResponseInterface
     {
-        $query = ['invoiceDate' => $invoiceDate->format('Y-m-d')];
+        $filters = ['invoiceDate' => $invoiceDate->format('Y-m-d')];
         $request = $this->request(
             method: Method::PUT,
             url: [self::PATH, $orderId, ':approveSubscriptionInvoice'],
-            query: $query,
+            filters: $filters,
         );
         return $this->sendRequest($request);
     }
