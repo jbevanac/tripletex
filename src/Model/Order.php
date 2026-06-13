@@ -48,7 +48,9 @@ final class Order implements ModelInterface
         public ?string $deliveryComment = null,
         public ?bool $isPrioritizeAmountsIncludingVat = null,
         public ?OrderLineSorting $orderLineSorting = null,
+        /** @var OrderGroup[]|null */
         public ?array $orderGroups = null,
+        /** @var OrderLine[]|null */
         public ?array $orderLines = null,
         public ?bool $isSubscription = null,
         public ?int $subscriptionDuration = null,
