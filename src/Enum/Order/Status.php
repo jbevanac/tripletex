@@ -2,7 +2,6 @@
 
 namespace Tripletex\Enum\Order;
 
-// Logistics only — verify these 10 values against the OpenAPI spec
 enum Status: string
 {
     case NONE = 'NONE';
