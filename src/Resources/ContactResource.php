@@ -54,6 +54,29 @@ final class ContactResource implements ResourceInterface
     }
 
     /**
+     * @param array{
+     *     version?: int,
+     *     firstName?: string,
+     *     lastName?: string,
+     *     email?: string,
+     *     phoneNumberMobileCountry?: int,
+     *     phoneNumberMobile?: string,
+     *     phoneNumberWork?: string,
+     *     customer?: int,
+     *     department?: int,
+     *     isInactive?: bool,
+     * } $data
+     * @throws TripletexException
+     */
+    public function update(int $id, array $data): Contact|ErrorResponse
+    {
+        return $this->updateResource(
+            model: Contact::make($data),
+            path: [self::PATH, $id],
+        );
+    }
+
+    /**
      * @throws TripletexException
      */
     public function find(int $id): Contact|ErrorResponse
