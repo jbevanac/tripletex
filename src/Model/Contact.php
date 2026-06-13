@@ -11,6 +11,7 @@ final class Contact implements ModelInterface
 
     public function __construct(
         public ?int $id = null,
+        public ?int $version = null,
         public ?string $url = null,
         public ?string $firstName = null,
         public ?string $lastName = null,
@@ -20,8 +21,8 @@ final class Contact implements ModelInterface
         public ?string $phoneNumberMobile = null,
         public ?string $phoneNumberWork = null,
         public ?Reference $customer = null,
-        public ?array $department = null,
-        public readonly ?bool $isInactive = null,
+        public ?Reference $department = null,
+        public ?bool $isInactive = null,
     ) {
     }
 }

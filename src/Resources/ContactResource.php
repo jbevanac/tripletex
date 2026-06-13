@@ -30,7 +30,17 @@ final class ContactResource implements ResourceInterface
     use CanCreateListResponse;
 
     /**
-     * @param array{name: string, email?: string} $data
+     * @param array{
+     *     firstName: string,
+     *     lastName: string,
+     *     email?: string,
+     *     phoneNumberMobileCountry?: int,
+     *     phoneNumberMobile?: string,
+     *     phoneNumberWork?: string,
+     *     customer?: int,
+     *     department?: int,
+     *     isInactive?: bool,
+     * } $data
      * @throws TripletexException
      */
     public function create(array $data): Contact|ErrorResponse
