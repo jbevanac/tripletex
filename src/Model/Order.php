@@ -4,8 +4,8 @@ namespace Tripletex\Model;
 
 use Tripletex\Contracts\ModelInterface;
 use Tripletex\Enum\invoicesDueInType;
-use Tripletex\Enum\OrderLineSorting;
-use Tripletex\Enum\OrderStatus;
+use Tripletex\Enum\Order\LineSorting;
+use Tripletex\Enum\Order\Status;
 use Tripletex\Enum\subscriptionDurationType;
 use Tripletex\Enum\SubscriptionInvoicingTimeInAdvanceOrArrears;
 use Tripletex\Enum\SubscriptionInvoicingTimeType;
@@ -41,13 +41,13 @@ final class Order implements ModelInterface
         public ?Reference $currency = null,
         public ?int $invoicesDueIn = null,
         public ?invoicesDueInType $invoicesDueInType = null,
-        public ?OrderStatus $status = null,
+        public ?Status $status = null,
         public ?bool $isShowOpenPostsOnInvoices = null,
         public ?bool $isClosed = null,
         public ?Reference $deliveryAddress = null,
         public ?string $deliveryComment = null,
         public ?bool $isPrioritizeAmountsIncludingVat = null,
-        public ?OrderLineSorting $orderLineSorting = null,
+        public ?LineSorting $orderLineSorting = null,
         /** @var OrderGroup[]|null */
         public ?array $orderGroups = null,
         /** @var OrderLine[]|null */

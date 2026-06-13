@@ -1,9 +1,9 @@
 <?php
 
-namespace Tripletex\Enum;
+namespace Tripletex\Enum\Order;
 
 // Verify these 4 values against the OpenAPI spec
-enum OrderLineSorting: string
+enum LineSorting: string
 {
     case ID = 'ID';
     case PRODUCT = 'PRODUCT';
