@@ -14,6 +14,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\BackedEnumNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
+use Tripletex\Normalizer\IdNormalizer;
 use Tripletex\Contracts\Resources;
 use Tripletex\Contracts\SDKInterface;
 use Tripletex\Enum\Method;
@@ -306,7 +307,7 @@ final class TripletexSDK implements SDKInterface, Resources
     public static function getSerializer(): Serializer
     {
          return new Serializer(
-            [new BackedEnumNormalizer(), new ObjectNormalizer(null, null, null, new ReflectionExtractor())],
+            [new IdNormalizer(), new BackedEnumNormalizer(), new ObjectNormalizer(null, null, null, new ReflectionExtractor())],
             [new JsonEncoder()]
         );
 

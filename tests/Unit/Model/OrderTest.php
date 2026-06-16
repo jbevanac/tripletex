@@ -2,9 +2,9 @@
 
 namespace Tripletex\Tests\Unit\Model;
 
+use Tripletex\Model\Customer;
 use Tripletex\Model\Order;
 use Tripletex\Model\OrderLine;
-use Tripletex\Reference;
 use Tripletex\Tests\TestCase;
 
 class OrderTest extends TestCase
@@ -37,7 +37,7 @@ class OrderTest extends TestCase
     public function test_order_with_order_lines_serializes(): void
     {
         $order = new Order(
-            customer: new Reference(99),
+            customer: new Customer(id: 99),
             orderDate: '2025-06-01',
             orderLines: [
                 new OrderLine(description: 'Item A', count: 1, unitPriceExcludingVatCurrency: 500),

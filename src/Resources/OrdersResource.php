@@ -5,6 +5,7 @@ namespace Tripletex\Resources;
 use Psr\Http\Message\ResponseInterface;
 use Tripletex\Contracts\ResourceInterface;
 use Tripletex\Enum\Method;
+use Tripletex\Model\Customer;
 use Tripletex\Model\ErrorResponse;
 use Tripletex\Model\Order;
 use Tripletex\Exceptions\TripletexException;
@@ -35,7 +36,7 @@ final class OrdersResource implements ResourceInterface
 
     /**
      * @param array{
-     *     customer: int,
+     *     customer: int|Customer|array{id: int},
      *     orderDate: string,
      *     deliveryDate: string,
      *     version?: int,
@@ -94,7 +95,7 @@ final class OrdersResource implements ResourceInterface
     /**
      * @param array{
      *     version?: int,
-     *     customer?: int,
+     *     customer?: int|Customer|array{id: int},
      *     orderDate?: string,
      *     deliveryDate?: string,
      *     contact?: int,
