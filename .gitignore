@@ -3,3 +3,7 @@
 /.idea/
 config.php
 .DS_Store
+.env.local
+.env.*.local
+/var/
+.phpunit.result.cache
