@@ -27,23 +27,25 @@ $sdk = new TripletexSDK(
 );
 
 // List
-$list = $sdk->customers()->list();
+$list = $sdk->contacts()->list();
 dd($list);
 
 // Create
-// $customer = $sdk->customers()->create([
-//     'name' => 'Acme AS',
-//     'email' => 'billing@acme.no',
-//     'organizationNumber' => '123456789',
+// $contact = $sdk->contacts()->create([
+//     'firstName' => 'Jane',
+//     'lastName' => 'Doe',
+//     'email' => 'jane.doe@example.com',
+//     'phoneNumberMobile' => '+4791234567',
+//     'customer' => 12345678,
 // ]);
-// dd($customer);
+// dd($contact);
 
 // Find
-// $customer = $sdk->customers()->find(12345678);
-// dd($customer);
+// $contact = $sdk->contacts()->find(12345678);
+// dd($contact);
 
 // Update
-// $sdk->customers()->update(12345678, [
-//     'name' => 'Acme AS (updated)',
-//     'email' => 'new@acme.no',
+// $sdk->contacts()->update(12345678, [
+//     'email' => 'updated@example.com',
+//     'isInactive' => false,
 // ]);
