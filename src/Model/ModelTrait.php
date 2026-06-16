@@ -38,6 +38,7 @@ trait ModelTrait
             return TripletexSDK::getSerializer()->denormalize(
                 data: $data,
                 type: static::class,
+                context: [AbstractObjectNormalizer::DISABLE_TYPE_ENFORCEMENT => true],
             );
         } catch (\Exception $e) {
             throw new SerializerException('Deserialization failed: ' . $e->getMessage(), 0, $e);
