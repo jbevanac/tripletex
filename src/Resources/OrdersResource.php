@@ -9,12 +9,15 @@ use Tripletex\Model\ErrorResponse;
 use Tripletex\Model\Order;
 use Tripletex\Exceptions\TripletexException;
 use Tripletex\Exceptions\FailedToCreateResourceException;
+use Tripletex\Model\ListResponse;
 use Tripletex\Model\OrderGroup;
 use Tripletex\Resources\Concerns\CanAccessSDK;
 use Tripletex\Resources\Concerns\CanCreateCollection;
+use Tripletex\Resources\Concerns\CanCreateListResponse;
 use Tripletex\Resources\Concerns\CanCreateRequest;
 use Tripletex\Resources\Concerns\CanCreateResource;
 use Tripletex\Resources\Concerns\CanFindResource;
+use Tripletex\Resources\Concerns\CanListResource;
 use Tripletex\Resources\Concerns\CanUpdateResource;
 
 final class OrdersResource implements ResourceInterface
@@ -25,8 +28,10 @@ final class OrdersResource implements ResourceInterface
     use CanCreateRequest;
     use CanUpdateResource;
     use CanCreateCollection;
+    use CanCreateListResponse;
     use CanCreateResource;
     use CanFindResource;
+    use CanListResource;
 
     /**
      * @param array{
@@ -138,6 +143,18 @@ final class OrdersResource implements ResourceInterface
         return $this->updateResource(
             model: Order::make($data),
             path: [self::PATH, $id],
+        );
+    }
+
+    /**
+     * @throws TripletexException
+     */
+    public function list(array $filters = []): ListResponse|ErrorResponse
+    {
+        return $this->listResource(
+            modelClass: Order::class,
+            path: self::PATH,
+            filters: $filters,
         );
     }
 
