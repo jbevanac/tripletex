@@ -25,11 +25,18 @@
   "require-dev": {
     "symfony/http-client": "^7.3",
     "symfony/var-dumper": "^7.4",
-    "symfony/cache": "^7.4"
+    "symfony/cache": "^7.4",
+    "phpunit/phpunit": "^11",
+    "vlucas/phpdotenv": "^5.6"
   },
   "autoload": {
     "psr-4": {
       "Tripletex\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tripletex\\Tests\\": "tests/"
     }
   },
   "config": {
