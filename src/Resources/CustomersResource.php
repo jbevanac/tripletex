@@ -45,8 +45,8 @@ final class CustomersResource implements ResourceInterface
      *     emailAttachmentType?: string,
      *     invoicesDueIn?: int,
      *     invoicesDueInType?: string,
-     *     postalAddress?: array,
-     *     physicalAddress?: array,
+     *     postalAddress?: array{addressLine1?: string, addressLine2?: string, postalCode?: string, city?: string, country?: array{id: int}|int},
+     *     physicalAddress?: array{addressLine1?: string, addressLine2?: string, postalCode?: string, city?: string, country?: array{id: int}|int},
      * } $data
      * @throws TripletexException
      */
@@ -77,8 +77,8 @@ final class CustomersResource implements ResourceInterface
      *     emailAttachmentType?: string,
      *     invoicesDueIn?: int,
      *     invoicesDueInType?: string,
-     *     postalAddress?: array,
-     *     physicalAddress?: array,
+     *     postalAddress?: array{addressLine1?: string, addressLine2?: string, postalCode?: string, city?: string, country?: array{id: int}|int},
+     *     physicalAddress?: array{addressLine1?: string, addressLine2?: string, postalCode?: string, city?: string, country?: array{id: int}|int},
      * } $data
      * @throws TripletexException
      */

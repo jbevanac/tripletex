@@ -50,4 +50,28 @@ final class CountriesResource implements ResourceInterface
         );
     }
 
+    /**
+     * Country ids differ from ISO codes, so addresses and phone numbers need this lookup.
+     *
+     * @param string $isoCode ISO 3166-1 alpha-2, e.g. "SE"
+     * @throws TripletexException
+     */
+    public function findByIsoCode(string $isoCode): Country|ErrorResponse|null
+    {
+        $isoCode = strtoupper($isoCode);
+        $response = $this->list(['code' => $isoCode]);
+
+        if ($response instanceof ErrorResponse) {
+            return $response;
+        }
+
+        foreach ($response->values ?? [] as $country) {
+            if ($country->isoAlpha2Code === $isoCode) {
+                return $country;
+            }
+        }
+
+        return null;
+    }
+
 }
