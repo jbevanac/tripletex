@@ -6,6 +6,7 @@
 - Employee.
 - Invoice.
 - Orders.
+- Vat type.
 - Webhook.
 
 ## Installation
