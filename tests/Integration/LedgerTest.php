@@ -27,7 +27,7 @@ class LedgerTest extends TestCase
         $this->assertNull($this->sdkFromEnv()->ledgerAccounts()->findByNumber(99999));
     }
 
-    public function test_create_find_and_delete_draft_voucher(): void
+    public function test_create_attach_and_delete_draft_voucher(): void
     {
         $this->skipIfNoCredentials();
 
@@ -50,15 +50,24 @@ class LedgerTest extends TestCase
         ), sendToLedger: false);
 
         $this->assertInstanceOf(Voucher::class, $created, $created->message ?? '');
-        $this->assertSame($external, $created->externalVoucherNumber);
 
-        $found = $sdk->vouchers()->findByExternalVoucherNumber(
-            $external,
-            new \DateTimeImmutable('today'),
-            new \DateTimeImmutable('tomorrow'),
-        );
-        $this->assertSame($created->id, $found?->id);
+        try {
+            $this->assertSame($external, $created->externalVoucherNumber);
 
-        $this->assertTrue($sdk->vouchers()->delete($created->id));
+            $found = $sdk->vouchers()->findByExternalVoucherNumber(
+                $external,
+                new \DateTimeImmutable('today'),
+                new \DateTimeImmutable('tomorrow'),
+            );
+            $this->assertSame($created->id, $found?->id);
+
+            $pdf = file_get_contents(__DIR__.'/../Fixtures/attachment.pdf');
+            $attached = $sdk->vouchers()->uploadAttachment($created->id, 'sdk-test.pdf', $pdf);
+            $this->assertInstanceOf(Voucher::class, $attached, $attached->message ?? '');
+            $this->assertNotNull($sdk->vouchers()->find($created->id)->attachment?->id);
+        } finally {
+            // Always remove the draft, so a failing test leaves nothing behind in the sandbox
+            $this->assertTrue($sdk->vouchers()->delete($created->id));
+        }
     }
 }

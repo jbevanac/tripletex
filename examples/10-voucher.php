@@ -48,6 +48,10 @@ $voucher = new Voucher(
 $created = $sdk->vouchers()->create($voucher, sendToLedger: false);
 dd($created);
 
+// Attach the documentation
+// $attached = $sdk->vouchers()->uploadAttachment($created->id, 'example.pdf', file_get_contents('example.pdf'));
+// dd($attached);
+
 // Already booked?
 // $existing = $sdk->vouchers()->findByExternalVoucherNumber('example-1', new DateTimeImmutable('2026-10-01'), new DateTimeImmutable('2026-11-01'));
 // dd($existing);

@@ -129,6 +129,40 @@ final class VouchersResource implements ResourceInterface
     }
 
     /**
+     * Attaches a document (usually a PDF) to the voucher, as its documentation.
+     *
+     * @throws TripletexException
+     */
+    public function uploadAttachment(int $voucherId, string $fileName, string $contents, string $contentType = 'application/pdf'): Voucher|ErrorResponse
+    {
+        $boundary = 'tripletex-'.bin2hex(random_bytes(12));
+        $safeName = str_replace(['"', "\r", "\n"], '', $fileName);
+
+        $body = "--$boundary\r\n"
+            ."Content-Disposition: form-data; name=\"file\"; filename=\"$safeName\"\r\n"
+            ."Content-Type: $contentType\r\n\r\n"
+            .$contents."\r\n"
+            ."--$boundary--\r\n";
+
+        $request = $this->request(
+            method: Method::POST,
+            url: [self::PATH, $voucherId, 'attachment'],
+            body: $body,
+            headers: ['Content-Type' => 'multipart/form-data; boundary='.$boundary],
+        );
+
+        $response = $this->sendRequest($request);
+        $responseData = $this->decodeJsonResponse($response);
+        $data = $responseData['value'] ?? $responseData;
+
+        if (in_array($response->getStatusCode(), [200, 201], true)) {
+            return Voucher::make($data);
+        }
+
+        return ErrorResponse::make($data);
+    }
+
+    /**
      * @throws TripletexException
      */
     public function delete(int $id): true|ErrorResponse
