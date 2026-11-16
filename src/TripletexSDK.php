@@ -34,9 +34,11 @@ use Tripletex\Resources\CountriesResource;
 use Tripletex\Resources\CustomersResource;
 use Psr\SimpleCache\CacheInterface;
 use Tripletex\Resources\InvoicesResource;
+use Tripletex\Resources\LedgerAccountsResource;
 use Tripletex\Resources\OrdersResource;
 use Tripletex\Resources\EmployeeResource;
 use Tripletex\Resources\VatTypesResource;
+use Tripletex\Resources\VouchersResource;
 use Tripletex\Resources\WebhookResource;
 
 final class TripletexSDK implements SDKInterface, Resources
@@ -351,6 +353,13 @@ final class TripletexSDK implements SDKInterface, Resources
         );
     }
 
+    public function ledgerAccounts(): LedgerAccountsResource
+    {
+        return new LedgerAccountsResource(
+            sdk: $this
+        );
+    }
+
     public function orders(): OrdersResource
     {
         return new OrdersResource(
@@ -361,6 +370,13 @@ final class TripletexSDK implements SDKInterface, Resources
     public function vatTypes(): VatTypesResource
     {
         return new VatTypesResource(
+            sdk: $this
+        );
+    }
+
+    public function vouchers(): VouchersResource
+    {
+        return new VouchersResource(
             sdk: $this
         );
     }

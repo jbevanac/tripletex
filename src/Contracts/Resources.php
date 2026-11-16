@@ -7,8 +7,10 @@ use Tripletex\Resources\CountriesResource;
 use Tripletex\Resources\CustomersResource;
 use Tripletex\Resources\EmployeeResource;
 use Tripletex\Resources\InvoicesResource;
+use Tripletex\Resources\LedgerAccountsResource;
 use Tripletex\Resources\OrdersResource;
 use Tripletex\Resources\VatTypesResource;
+use Tripletex\Resources\VouchersResource;
 use Tripletex\Resources\WebhookResource;
 
 interface Resources
@@ -23,9 +25,13 @@ interface Resources
 
     public function invoices(): InvoicesResource;
 
+    public function ledgerAccounts(): LedgerAccountsResource;
+
     public function orders(): OrdersResource;
 
     public function vatTypes(): VatTypesResource;
+
+    public function vouchers(): VouchersResource;
 
     public function webhook(): WebhookResource;
 }

@@ -5,8 +5,10 @@
 - Customer.
 - Employee.
 - Invoice.
+- Ledger accounts.
 - Orders.
 - Vat type.
+- Vouchers (bilag).
 - Webhook.
 
 ## Installation
